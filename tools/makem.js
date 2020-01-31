@@ -116,6 +116,8 @@ FLAGS += ' -s ASSERTIONS=1';
 FLAGS += ' --memory-init-file 0 '; // for memless file
 FLAGS += ' -s FORCE_FILESYSTEM=1'
 
+var POST_FLAGS = ' --post-js ' + path.resolve(__dirname, '../js/ARfset_additions.js') +' ';
+
 var EXPORTED_FUNCTIONS = ' -s EXPORTED_FUNCTIONS=["_readImageSet"] -s EXTRA_EXPORTED_RUNTIME_METHODS=["FS"] ';
 
 /* DEBUG FLAGS */
@@ -171,7 +173,7 @@ var compile_combine = format(EMCC + ' ' + INCLUDES + ' '
 	 OUTPUT_PATH, OUTPUT_PATH, BUILD_DEBUG_FILE);
 
 var compile_combine_min = format(EMCC + ' '  + INCLUDES + ' '
-	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES + EXPORTED_FUNCTIONS
+	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES + POST_FLAGS + EXPORTED_FUNCTIONS
 	+ FLAGS + ' -s WASM=0' + ' ' + DEFINES  + ' -o {OUTPUT_PATH}{BUILD_FILE} ',
  	OUTPUT_PATH, OUTPUT_PATH, BUILD_MIN_FILE);
 
