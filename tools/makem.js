@@ -165,11 +165,6 @@ var compile_arlib = format(EMCC + ' ' + INCLUDES + ' '
 	+ FLAGS + ' ' + DEFINES + ' -o {OUTPUT_PATH}libar.bc ',
 		OUTPUT_PATH);
 
- var compile_kpm = format(EMCC + ' ' + INCLUDES + ' '
- 	+ kpm_sources.join(' ')
- 	+ FLAGS + ' ' + DEFINES + ' -o {OUTPUT_PATH}libkpm.bc ',
- 		OUTPUT_PATH);
-
 var compile_combine = format(EMCC + ' ' + INCLUDES + ' '
 	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES
 	+ FLAGS + ' -s WASM=0' + ' '  + DEBUG_FLAGS + DEFINES + ' -o {OUTPUT_PATH}{BUILD_FILE} ',
@@ -185,12 +180,6 @@ var compile_wasm = format(EMCC + ' ' + INCLUDES + ' '
 	+ FLAGS + DEFINES + ' -o {OUTPUT_PATH}{BUILD_FILE} ',
 	 OUTPUT_PATH, OUTPUT_PATH, BUILD_WASM_FILE);
 
-/*
-var compile_all = format(EMCC + ' ' + INCLUDES + ' '
-	+ ar_sources.join(' ')
-	+ FLAGS + ' ' + DEFINES + ' -o {OUTPUT_PATH}{BUILD_FILE} ',
-		OUTPUT_PATH, BUILD_FILE);
-*/
 var compile_all = format(EMCC + ' ' + INCLUDES + ' '
 	+ ar_sources.join(' ')
 	+ FLAGS + ' ' + DEFINES + ' -o {OUTPUT_PATH}{BUILD_FILE} ',
@@ -236,7 +225,6 @@ function addJob(job) {
 
 addJob(clean_builds);
 addJob(compile_arlib);
-//addJob(compile_kpm);
 //addJob(compile_combine);
 //addJob(compile_wasm);
 addJob(compile_combine_min);
