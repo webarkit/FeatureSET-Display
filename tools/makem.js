@@ -28,9 +28,9 @@ var MEM = (256 *1024 * 1024) ; // 64MB
 var SOURCE_PATH = path.resolve(__dirname, '../emscripten/') + '/';
 var OUTPUT_PATH = path.resolve(__dirname, '../build/') + '/';
 
-var BUILD_DEBUG_FILE = 'FeatureSETDisplay.debug.js';
-var BUILD_WASM_FILE = 'FeatureSETDisplay_wasm.js';
-var BUILD_MIN_FILE = 'FeatureSETDisplay.min.js';
+var BUILD_DEBUG_FILE = 'featureSETDisplay.debug.js';
+var BUILD_WASM_FILE = 'featureSETDisplay_wasm.js';
+var BUILD_MIN_FILE = 'featureSETDisplay.min.js';
 
 var MAIN_SOURCES = [
 	'ARimageFsetDisplay.c',
@@ -116,7 +116,7 @@ FLAGS += ' -s ASSERTIONS=1';
 FLAGS += ' --memory-init-file 0 '; // for memless file
 FLAGS += ' -s FORCE_FILESYSTEM=1'
 
-var POST_FLAGS = ' --post-js ' + path.resolve(__dirname, '../js/ARfset_additions.js') +' ';
+var PRE_FLAGS = ' --pre-js ' + path.resolve(__dirname, '../js/arfset.api.js') +' ';
 
 var EXPORTED_FUNCTIONS = ' -s EXPORTED_FUNCTIONS=["_readImageSet"] -s EXTRA_EXPORTED_RUNTIME_METHODS=["FS"] ';
 
@@ -173,7 +173,7 @@ var compile_combine = format(EMCC + ' ' + INCLUDES + ' '
 	 OUTPUT_PATH, OUTPUT_PATH, BUILD_DEBUG_FILE);
 
 var compile_combine_min = format(EMCC + ' '  + INCLUDES + ' '
-	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES + POST_FLAGS + EXPORTED_FUNCTIONS
+	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES + PRE_FLAGS + EXPORTED_FUNCTIONS
 	+ FLAGS + ' -s WASM=0' + ' ' + DEFINES  + ' -o {OUTPUT_PATH}{BUILD_FILE} ',
  	OUTPUT_PATH, OUTPUT_PATH, BUILD_MIN_FILE);
 
@@ -227,7 +227,7 @@ function addJob(job) {
 
 addJob(clean_builds);
 addJob(compile_arlib);
-//addJob(compile_combine);
+addJob(compile_combine);
 //addJob(compile_wasm);
 addJob(compile_combine_min);
 // addJob(compile_all);

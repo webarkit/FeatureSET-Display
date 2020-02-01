@@ -13,29 +13,26 @@
 #include <AR2/util.h>
 #include <KPM/kpm.h>
 
-static AR2ImageSetT            *imageSet;
-static int                      page = 0;
 
-
-int EMSCRIPTEN_KEEPALIVE readImageSet(char *filename, ARUint8 *imageData){
+AR2ImageSetT  * EMSCRIPTEN_KEEPALIVE readImageSet(char *filename){
+  AR2ImageSetT            *imageSet;
   if( filename == NULL ){
     ARLOGe("Missed filename in the args!");
     return 0;
   }
-
+  ARLOGi("Init reading .iset \n");
   if(filename){
 
-    ARLOG("Read ImageSet.\n");
+    ARLOGi("Read ImageSet.\n");
     ar2UtilRemoveExt( filename );
     imageSet = ar2ReadImageSet( filename );
     if( imageSet == NULL ) {
         ARLOGe("file open error: %s.iset\n", filename );
         exit(0);
     }
-    ARLOG("  end.\n");
+    ARLOGi("  end.\n");
   }
 
-  imageData = imageSet->scale[page]->imgBW;
-    return 1;
+  return imageSet;
 
 }

@@ -11,31 +11,10 @@ var imageData = {
     array: []
 }
 
-let heapSpace = Module._malloc(imageData.array.length * imageData.array.BYTES_PER_ELEMENT);
-Module.HEAPU8.set(imageData.array, heapSpace);
+var imageSet = {};
 
-Module._readImageSet("./data/pinball.iset", imageData.array);
-console.log(imageData.array);
-console.log("read .iset");
+var arfset = new ARfset();
+console.log(arfset);
+arfset.loadImageSet('data/pinball.iset');
 
-context.putImageData(imageData.array.buffer, imageData.sizeX, imageData.sizeY);
-
-Module._free(heapSpace);
-
-/*window.addEventListener('FeatureSETDisplay-loaded', () => {
-  console.log('inside');
-
-
-
-  let heapSpace = Module._malloc(imageData.array.length * imageData.array.BYTES_PER_ELEMENT);
-  Module.HEAPU8.set(imageData.array, heapSpace);
-
-  Module._readImageSet("./data/pinball.iset", imageData.array);
-  console.log("read .iset");
-
-  context.putImageData(imageData.array, imageData.sizeX, imageData.sizeY);
-
-  Module._free(heapSpace);
-
-});
-*/
+//context.putImageData(imageData.array.buffer, imageData.sizeX, imageData.sizeY);
