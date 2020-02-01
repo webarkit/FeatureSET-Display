@@ -15,7 +15,9 @@ var imageSet = {};
 
 var arfset = new ARfset();
 console.log(arfset);
-arfset.loadImageSet('data/pinball.iset');
+arfset.loadImageSet('data/pinball.iset', function(iset){
+  console.log(iset);
+});
 var iset = arfset.getImageSet();
 console.log(iset);
 

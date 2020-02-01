@@ -15,7 +15,7 @@ var iset_count;
 
 ARfset.prototype.loadImageSet = function(url, callback, onError){
   if (url) {
-    return this.imageSet = readImageSet(url, callback, onError)
+    arfset.readImageSet(url, callback, onError)
   } else {
       if (onError) {
           onError("Iset URL needs to be defined and not equal empty string!");
