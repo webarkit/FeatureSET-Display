@@ -16,5 +16,7 @@ var imageSet = {};
 var arfset = new ARfset();
 console.log(arfset);
 arfset.loadImageSet('data/pinball.iset');
+var iset = arfset.getImageSet();
+console.log(iset);
 
 //context.putImageData(imageData.array.buffer, imageData.sizeX, imageData.sizeY);

@@ -26,6 +26,10 @@ ARfset.prototype.loadImageSet = function(url, callback, onError){
     }
 };
 
+ARfset.prototype.getImageSet = function(){
+  return this.imageSet;
+}
+
 function readImageSet(url, callback, onError){
   var filename = '/readiset_' + iset_count++;
   ajax(url, filename, function () {
@@ -75,6 +79,7 @@ var arfset = {
 
 var FUNCTIONS = [
   'loadImageSet',
+  'getImageSet'
 ];
 
 function runWhenLoaded() {
@@ -88,6 +93,7 @@ function runWhenLoaded() {
     }
 }
 
+scope.arfset = arfset;
 scope.ARfset = ARfset;
 
 if (scope.Module) {
