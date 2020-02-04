@@ -13,8 +13,10 @@
 #include <AR2/util.h>
 #include <KPM/kpm.h>
 
+static AR2ImageSetT *imageSet;
+
 int EMSCRIPTEN_KEEPALIVE getIsetWidth(const char *filename){
-  AR2ImageSetT            *imageSet;
+  //AR2ImageSetT            *imageSet;
   int width;
   //filename = "data/pinball.iset";
   ARLOGi("filename is: %s\n", filename);
@@ -46,7 +48,7 @@ int EMSCRIPTEN_KEEPALIVE getIsetWidth(const char *filename){
 
 
 AR2ImageSetT  * EMSCRIPTEN_KEEPALIVE readImageSet(char *filename){
-  AR2ImageSetT            *imageSet;
+  //AR2ImageSetT            *imageSet;
   //filename = "data/pinball.iset";
   ARLOGi("filename is: %s\n", filename);
   if( filename == NULL ){
