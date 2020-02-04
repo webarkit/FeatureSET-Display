@@ -9,13 +9,16 @@ if (typeof window !== 'undefined') {
 
 var ARfset = function(){
   this.imageSet = null;
+  this.imageSetWidth = 0;
 }
 
 ARfset.prototype.getIsetWidth = function(url, callback, onError){
   if (url) {
     console.log(url);
-    arfset.getIsetWidth(url, function(width){
+    var self = this;
+    return arfset.getIsetWidth(url, function(width){
       console.log(width);
+      self.imageSetWidth = width;
       callback(width)
     }, onError)
   } else {
