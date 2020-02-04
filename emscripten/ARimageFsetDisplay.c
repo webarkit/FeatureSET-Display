@@ -13,7 +13,7 @@
 #include <AR2/util.h>
 #include <KPM/kpm.h>
 
-int EMSCRIPTEN_KEEPALIVE getIsetWidth(char *filename){
+int EMSCRIPTEN_KEEPALIVE getIsetWidth(const char *filename){
   AR2ImageSetT            *imageSet;
   int width;
   //filename = "data/pinball.iset";

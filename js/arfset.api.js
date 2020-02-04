@@ -55,9 +55,9 @@ function getIsetWidth(url, callback, onError){
   var filename = '/getIsetW_' + iset_w_count++;
   ajax(url, filename, function () {
     console.log(filename);
-      var iset = Module._getIsetWidth(filename);
-      console.log(iset);
-      if (callback) callback(iset);
+      var width = Module._getIsetWidth(filename);
+      console.log(width);
+      if (callback) callback(width);
   }, function (errorNumber) { if (onError) onError(errorNumber) });
   };
 
@@ -116,6 +116,7 @@ var arfset = {
 
 var FUNCTIONS = [
   'loadImageSet',
+  'getIsetWidth',
   'getImageSet'
 ];
 
