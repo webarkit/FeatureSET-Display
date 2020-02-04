@@ -13,11 +13,13 @@
 #include <AR2/util.h>
 #include <KPM/kpm.h>
 
-
-AR2ImageSetT  * EMSCRIPTEN_KEEPALIVE readImageSet(char *filename){
+int EMSCRIPTEN_KEEPALIVE getIsetWidth(char *filename){
   AR2ImageSetT            *imageSet;
+  int width;
+  //filename = "data/pinball.iset";
+  ARLOGi("filename is: %s\n", filename);
   if( filename == NULL ){
-    ARLOGe("Missed filename in the args!");
+    ARLOGe("Missed filename in the args!\n");
     return 0;
   }
   ARLOGi("Init reading .iset \n");
@@ -26,6 +28,38 @@ AR2ImageSetT  * EMSCRIPTEN_KEEPALIVE readImageSet(char *filename){
     ARLOGi("Read ImageSet.\n");
     ar2UtilRemoveExt( filename );
     imageSet = ar2ReadImageSet( filename );
+    ARLOGi("image set is: %s\n", imageSet);
+    if( imageSet == NULL ) {
+        ARLOGe("file open error: %s.iset\n", filename );
+        exit(0);
+    }
+    ARLOGi("  end.\n");
+  }
+
+  width = imageSet->scale[0]->xsize;
+
+  ARLOGi("Marker width is: &d\n");
+
+  return width;
+
+}
+
+
+AR2ImageSetT  * EMSCRIPTEN_KEEPALIVE readImageSet(char *filename){
+  AR2ImageSetT            *imageSet;
+  //filename = "data/pinball.iset";
+  ARLOGi("filename is: %s\n", filename);
+  if( filename == NULL ){
+    ARLOGe("Missed filename in the args!\n");
+    return 0;
+  }
+  ARLOGi("Init reading .iset \n");
+  if(filename){
+
+    ARLOGi("Read ImageSet.\n");
+    ar2UtilRemoveExt( filename );
+    imageSet = ar2ReadImageSet( filename );
+    ARLOGi("image set is: %s\n", imageSet);
     if( imageSet == NULL ) {
         ARLOGe("file open error: %s.iset\n", filename );
         exit(0);

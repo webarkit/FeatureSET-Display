@@ -11,7 +11,22 @@ var ARfset = function(){
   this.imageSet = null;
 }
 
-var iset_count = 0;
+ARfset.prototype.getIsetWidth = function(url, callback, onError){
+  if (url) {
+    console.log(url);
+    arfset.getIsetWidth(url, function(width){
+      console.log(width);
+      callback(width)
+    }, onError)
+  } else {
+      if (onError) {
+          onError("Iset URL needs to be defined and not equal empty string!");
+      }
+      else {
+          console.error("Iset URL needs to be defined and not equal empty string!");
+      }
+    }
+};
 
 ARfset.prototype.loadImageSet = function(url, callback, onError){
   if (url) {
@@ -33,6 +48,21 @@ ARfset.prototype.loadImageSet = function(url, callback, onError){
 ARfset.prototype.getImageSet = function(){
   return this.imageSet;
 }
+
+var iset_w_count = 0;
+
+function getIsetWidth(url, callback, onError){
+  var filename = '/getIsetW_' + iset_w_count++;
+  ajax(url, filename, function () {
+    console.log(filename);
+      var iset = Module._getIsetWidth(filename);
+      console.log(iset);
+      if (callback) callback(iset);
+  }, function (errorNumber) { if (onError) onError(errorNumber) });
+  };
+
+
+var iset_count = 0;
 
 function readImageSet(url, callback, onError){
   var filename = '/readIset_' + iset_count++;
@@ -80,7 +110,8 @@ function ajax(url, target, callback, errorCallback) {
 }
 
 var arfset = {
-  readImageSet: readImageSet
+  readImageSet: readImageSet,
+  getIsetWidth: getIsetWidth
 }
 
 var FUNCTIONS = [

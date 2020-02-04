@@ -118,7 +118,7 @@ FLAGS += ' -s FORCE_FILESYSTEM=1'
 
 var PRE_FLAGS = ' --pre-js ' + path.resolve(__dirname, '../js/arfset.api.js') +' ';
 
-var EXPORTED_FUNCTIONS = ' -s EXPORTED_FUNCTIONS=["_readImageSet"] -s EXTRA_EXPORTED_RUNTIME_METHODS=["FS"] ';
+var EXPORTED_FUNCTIONS = ' -s EXPORTED_FUNCTIONS=["_getIsetWidth, _readImageSet"] -s EXTRA_EXPORTED_RUNTIME_METHODS=["FS"] ';
 
 /* DEBUG FLAGS */
 var DEBUG_FLAGS = ' -g ';
