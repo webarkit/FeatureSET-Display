@@ -11,11 +11,15 @@ var ARfset = function(){
   this.imageSet = null;
 }
 
-var iset_count;
+var iset_count = 0;
 
 ARfset.prototype.loadImageSet = function(url, callback, onError){
   if (url) {
-    arfset.readImageSet(url, callback, onError)
+    console.log(url);
+    arfset.readImageSet(url, function(iset){
+      console.log(iset);
+      callback(iset)
+    }, onError)
   } else {
       if (onError) {
           onError("Iset URL needs to be defined and not equal empty string!");
@@ -31,9 +35,11 @@ ARfset.prototype.getImageSet = function(){
 }
 
 function readImageSet(url, callback, onError){
-  var filename = '/readiset_' + iset_count++;
+  var filename = '/readIset_' + iset_count++;
   ajax(url, filename, function () {
+    console.log(filename);
       var iset = Module._readImageSet(filename);
+      console.log(iset);
       if (callback) callback(iset);
   }, function (errorNumber) { if (onError) onError(errorNumber) });
 };
