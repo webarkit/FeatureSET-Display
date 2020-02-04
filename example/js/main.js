@@ -12,13 +12,13 @@ var imageData = {
 }
 
 var imageSet = {};
-
-var arfset = new ARfset();
-console.log(arfset);
-arfset.getIsetWidth('data/pinball.iset', function(width){
-  console.log(width);
-})
-
+var interval = setTimeout(function() {
+  var arfset = new ARfset();
+  console.log(arfset);
+  arfset.getIsetWidth('data/pinball.iset', function(width){
+    console.log(width);
+  })
+}, 200);
 //var w = new arfset.getIsetWidth('data/pinball.iset');
 /*arfset.loadImageSet('data/pinball.iset', function(iset){
   console.log(iset);

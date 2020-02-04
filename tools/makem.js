@@ -28,12 +28,12 @@ var MEM = (256 *1024 * 1024) ; // 64MB
 var SOURCE_PATH = path.resolve(__dirname, '../emscripten/') + '/';
 var OUTPUT_PATH = path.resolve(__dirname, '../build/') + '/';
 
-var BUILD_DEBUG_FILE = 'featureSETDisplay.debug.js';
-var BUILD_WASM_FILE = 'featureSETDisplay_wasm.js';
-var BUILD_MIN_FILE = 'featureSETDisplay.min.js';
+var BUILD_DEBUG_FILE = 'arfset.debug.js';
+var BUILD_WASM_FILE = 'arfset_wasm.js';
+var BUILD_MIN_FILE = 'arfset.min.js';
 
 var MAIN_SOURCES = [
-	'ARimageFsetDisplay.c',
+	'ARimageFsetDisplay.cpp',
 ];
 
 MAIN_SOURCES = MAIN_SOURCES.map(function(src) {
@@ -106,22 +106,15 @@ var DEFINES = ' ';
 if (HAVE_NFT) DEFINES += ' -D HAVE_NFT ';
 
 var FLAGS = '' + OPTIMIZE_FLAGS;
-// var FLAGS = '';
 FLAGS += ' -Wno-warn-absolute-paths ';
 FLAGS += ' -s TOTAL_MEMORY=' + MEM + ' ';
-FLAGS += ' -s ALLOW_MEMORY_GROWTH=1 ';
 FLAGS += ' -s USE_ZLIB=1';
-FLAGS += ' -s USE_LIBJPEG=1';
-FLAGS += ' -s ASSERTIONS=1';
+FLAGS += ' -s USE_LIBJPEG';
 FLAGS += ' --memory-init-file 0 '; // for memless file
-FLAGS += ' -s FORCE_FILESYSTEM=1'
 
 var PRE_FLAGS = ' --pre-js ' + path.resolve(__dirname, '../js/arfset.api.js') +' ';
 
-//Does it is necessary?
 FLAGS += ' --bind ';
-
-var EXPORTED_FUNCTIONS = ' -s EXPORTED_FUNCTIONS=["_getIsetWidth, _readImageSet"] -s EXTRA_EXPORTED_RUNTIME_METHODS=["FS"] ';
 
 /* DEBUG FLAGS */
 var DEBUG_FLAGS = ' -g ';
@@ -171,12 +164,12 @@ var compile_arlib = format(EMCC + ' ' + INCLUDES + ' '
 		OUTPUT_PATH);
 
 var compile_combine = format(EMCC + ' ' + INCLUDES + ' '
-	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES
+	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES + PRE_FLAGS
 	+ FLAGS + ' -s WASM=0' + ' '  + DEBUG_FLAGS + DEFINES + ' -o {OUTPUT_PATH}{BUILD_FILE} ',
 	 OUTPUT_PATH, OUTPUT_PATH, BUILD_DEBUG_FILE);
 
 var compile_combine_min = format(EMCC + ' '  + INCLUDES + ' '
-	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES + PRE_FLAGS + EXPORTED_FUNCTIONS
+	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES + PRE_FLAGS
 	+ FLAGS + ' -s WASM=0' + ' ' + DEFINES  + ' -o {OUTPUT_PATH}{BUILD_FILE} ',
  	OUTPUT_PATH, OUTPUT_PATH, BUILD_MIN_FILE);
 
