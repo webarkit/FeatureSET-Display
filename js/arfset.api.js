@@ -12,11 +12,11 @@ var ARfset = function(){
   this.imageSetWidth = 0;
 }
 
-ARfset.prototype.getIsetWidth = function(url, callback, onError){
+ARfset.prototype.getIsetWidth = function(id, url, callback, onError){
   if (url) {
     console.log(url);
     var self = this;
-    return arfset.getIsetWidth(url, function(width){
+    return arfset.getIsetWidth(id, url, function(width){
       console.log(width);
       self.imageSetWidth = width;
       callback(width)
@@ -54,11 +54,11 @@ ARfset.prototype.getImageSet = function(){
 
 var iset_w_count = 0;
 
-function getIsetWidth(url, callback, onError){
+function getIsetWidth(id, url, callback, onError){
   var filename = '/getIsetW_' + iset_w_count++;
   ajax(url, filename, function () {
     console.log(filename);
-      var width = Module._getIsetWidth(filename);
+      var width = Module._getIsetWidth(id, filename);
       console.log(width);
       if (callback) callback(width);
   }, function (errorNumber) { if (onError) onError(errorNumber) });
