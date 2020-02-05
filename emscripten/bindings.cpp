@@ -4,7 +4,7 @@ using namespace emscripten;
 
 EMSCRIPTEN_BINDINGS(constant_bindings) {
 
-  function("getIsetWidth", &getIsetWidth);
+  function("_getIsetWidth", &getIsetWidth);
 //  function("readImageSet", &readImageSet);
 
 }

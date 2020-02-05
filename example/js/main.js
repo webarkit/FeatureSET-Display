@@ -15,7 +15,7 @@ var imageSet = {};
 var interval = setTimeout(function() {
   var arfset = new ARfset();
   console.log(arfset);
-  arfset.getIsetWidth(0, 'data/pinball.iset', function(width){
+  arfset.getIsetWidth('data/pinball.iset', function(width){
     console.log(width);
   })
 }, 200);

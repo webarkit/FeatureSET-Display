@@ -8,15 +8,16 @@ if (typeof window !== 'undefined') {
 };
 
 var ARfset = function(){
+  this.id = 0;
   this.imageSet = null;
   this.imageSetWidth = 0;
 }
 
-ARfset.prototype.getIsetWidth = function(id, url, callback, onError){
+ARfset.prototype.getIsetWidth = function(url, callback, onError){
   if (url) {
     console.log(url);
     var self = this;
-    return arfset.getIsetWidth(id, url, function(width){
+    return arfset.getIsetWidth(url, function(width){
       console.log(width);
       self.imageSetWidth = width;
       callback(width)
@@ -54,11 +55,11 @@ ARfset.prototype.getImageSet = function(){
 
 var iset_w_count = 0;
 
-function getIsetWidth(id, url, callback, onError){
+function getIsetWidth(url, callback, onError){
   var filename = '/getIsetW_' + iset_w_count++;
   ajax(url, filename, function () {
     console.log(filename);
-      var width = Module._getIsetWidth(id, filename);
+      var width = Module._getIsetWidth(this.id, filename);
       console.log(width);
       if (callback) callback(width);
   }, function (errorNumber) { if (onError) onError(errorNumber) });
