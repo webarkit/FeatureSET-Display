@@ -43,6 +43,7 @@ MAIN_SOURCES = MAIN_SOURCES.map(function(src) {
 let srcTest = path.resolve(__dirname, ARTOOLKIT5_ROOT + '/lib/SRC/');
 
 var ar_sources = [
+		'AR/*.c',
     'Video/video.c',
     'ARUtil/log.c',
     'ARUtil/file_utils.c',

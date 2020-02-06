@@ -9,6 +9,7 @@ if (typeof window !== 'undefined') {
 
 var ARfset = function(width, height){
   this.id = 0;
+  this.nftMarkerCount = 0;
   this.imageSet = null;
   this.imageSetWidth = 0;
   this.framepointer = null;
@@ -54,6 +55,24 @@ ARfset.prototype.loadImageSet = function(url, callback, onError){
     }
 };
 
+ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
+    var self = this;
+    if (markerURL) {
+      return arfset.readNFTMarker(this.id, markerURL, function (id) {
+          self.nftMarkerCount = id + 1;
+          onSuccess(id);
+      }, onError);
+    } else {
+      if (onError) {
+          onError("Marker URL needs to be defined and not equal empty string!");
+      }
+      else {
+          console.error("Marker URL needs to be defined and not equal empty string!");
+      }
+    }
+
+};
+
 ARfset.prototype.getImageSet = function(){
   return this.imageSet;
 }
@@ -94,6 +113,24 @@ function readImageSet(url, callback, onError){
   }, function (errorNumber) { if (onError) onError(errorNumber) });
 };
 
+var marker_count = 0;
+
+function readNFTMarker(arId, url, callback, onError) {
+    var mId = marker_count++;
+    var prefix = '/markerNFT_' + mId;
+    var filename1 = prefix + '.fset';
+    var filename2 = prefix + '.iset';
+    var filename3 = prefix + '.fset3';
+    ajax(url + '.fset', filename1, function () {
+        ajax(url + '.iset', filename2, function () {
+            ajax(url + '.fset3', filename3, function () {
+                var id = Module._readNFTMarker(arId, prefix);
+                if (callback) callback(id);
+            }, function (errorNumber) { if (onError) onError(errorNumber) });
+        }, function (errorNumber) { if (onError) onError(errorNumber) });
+    }, function (errorNumber) { if (onError) onError(errorNumber) });
+}
+
 function writeStringToFS(target, string, callback) {
     var byteArray = new Uint8Array(string.length);
     for (var i = 0; i < byteArray.length; i++) {
@@ -131,7 +168,9 @@ function ajax(url, target, callback, errorCallback) {
 
 var arfset = {
   readImageSet: readImageSet,
-  getIsetWidth: getIsetWidth
+  getIsetWidth: getIsetWidth,
+  readNFTMarker: readNFTMarker
+
 }
 
 var FUNCTIONS = [

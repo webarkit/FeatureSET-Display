@@ -18,6 +18,7 @@ var interval = setTimeout(function() {
   arfset.getImageSetWidth('./data/pinball.iset', function(width){
     console.log(width);
   })
+  arfset.loadNFTMarker('data/pinball');
 }, 200);
 //var w = new arfset.getIsetWidth('data/pinball.iset');
 /*arfset.loadImageSet('data/pinball.iset', function(iset){
