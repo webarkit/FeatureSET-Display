@@ -14,12 +14,18 @@
 //static AR2ImageSetT *imageSet;
 
 struct arFset {
+  int id;
+  int width = 0;
+  int height = 0;
+  ARUint8 *videoFrame = NULL;
+	int videoFrameSize;
   AR2ImageSetT *imageSet = NULL;
 };
 
 std::unordered_map<int, arFset> arFsets;
 
 static int ARFSET_NOT_FOUND = -1;
+static int gARFsetID = 0;
 
 extern "C" {
 
@@ -28,6 +34,8 @@ extern "C" {
 		arFset *arc = &(arFsets[id]);
 
     int width;
+
+    ARLOGi("datasetPathname is: %s\n", datasetPathname.c_str());
 
     char * filename = new char[datasetPathname.size() + 1];
     std::copy(datasetPathname.begin(), datasetPathname.end(), filename);
@@ -88,6 +96,38 @@ extern "C" {
     return imageSet;
 
   }*/
+
+  int setup(int width, int height){
+    int id = gARFsetID++;
+		arFset *arc = &(arFsets[id]);
+		arc->id = id;
+
+    arc->width = width;
+		arc->height = height;
+
+		arc->videoFrameSize = width * height * 4 * sizeof(ARUint8);
+		arc->videoFrame = (ARUint8*) malloc(arc->videoFrameSize);
+    arc->imageSet = (AR2ImageSetT*) malloc(arc->videoFrameSize);
+
+    ARLOGi("Allocated videoFrameSize %d\n", arc->videoFrameSize);
+
+    EM_ASM_({
+			if (!arfset["frameMalloc"]) {
+				arfset["frameMalloc"] = ({});
+			}
+			var frameMalloc = arfset["frameMalloc"];
+			frameMalloc["framepointer"] = $1;
+			frameMalloc["frameIsetpointer"] = $2;
+      frameMalloc["framesize"] = $3;
+		},
+			arc->id,
+			arc->videoFrame,
+      arc->imageSet,
+			arc->videoFrameSize
+		);
+
+		return arc->id;
+  }
 
 }
 

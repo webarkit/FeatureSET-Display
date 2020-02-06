@@ -7,10 +7,15 @@ if (typeof window !== 'undefined') {
     scope = global;
 };
 
-var ARfset = function(){
+var ARfset = function(width, height){
   this.id = 0;
   this.imageSet = null;
   this.imageSetWidth = 0;
+  this.framepointer = null;
+  this.framesize = null;
+  this.frameIsetpointer = null;
+  this.dataHeap = null;
+  this._init(width, height);
 }
 
 ARfset.prototype.getImageSetWidth = function(url, callback, onError){
@@ -51,6 +56,17 @@ ARfset.prototype.loadImageSet = function(url, callback, onError){
 
 ARfset.prototype.getImageSet = function(){
   return this.imageSet;
+}
+
+ARfset.prototype._init = function(width, height){
+  this.id = arfset.setup(width, height);
+
+  var params = arfset.frameMalloc;
+  this.framepointer = params.framepointer;
+  this.framesize = params.framesize;
+  this.frameIsetpointer = params.frameIsetpointer;
+
+  this.dataHeap = new Uint8Array(Module.HEAPU8.buffer, this.framepointer, this.framesize);
 }
 
 var iset_w_count = 0;
@@ -119,6 +135,7 @@ var arfset = {
 }
 
 var FUNCTIONS = [
+  'setup',
   'loadImageSet',
   'getImageSetWidth',
   'getImageSet'
