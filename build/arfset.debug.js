@@ -40,8 +40,27 @@ var ARfset = function(width, height){
   this.frameIbwpointer = null;
   this.dataHeap = null;
   this.imgBW = null;
+  console.log(document);
+
+  if (typeof document !== 'undefined') {
+      this.canvas = document.createElement('canvas');
+      this.canvas.width = width;
+      this.canvas.height = height;
+      this.ctx = this.canvas.getContext('2d');
+  }
+
   this._init(width, height);
-}
+};
+
+ARfset.prototype.display = function () {
+    document.body.appendChild(this.canvas);
+
+    // Display Image set
+    var buffer = new Uint8ClampedArray(this.framesize);
+    buffer.set(this.imgBW);
+    var bwImageData = new ImageData(buffer, this.canvas.width, this.canvas.height);
+    this.ctx.putImageData(bwImageData, 0, 0);
+};
 
 ARfset.prototype.getImageSetWidth = function(url, callback, onError){
   if (url) {
@@ -201,6 +220,7 @@ var arfset = {
 
 var FUNCTIONS = [
   'setup',
+  'display',
   'loadImageSet',
   'getImageSetWidth',
   'getImageSet'
