@@ -25,6 +25,8 @@ struct arFset {
   int width_NFT;
 	int height_NFT;
 	int dpi_NFT;
+  int num_F_set_NFT; // number of Feature sets
+  int num_F_points_NFT; // number of Feature points
   int surfaceSetCount = 0; // Running NFT marker id
 };
 
@@ -117,11 +119,15 @@ extern "C" {
 		arc->width_NFT = arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->scale[0]->xsize;
 		arc->height_NFT = arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->scale[0]->ysize;
 		arc->dpi_NFT = arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->scale[0]->dpi;
+    arc->num_F_set_NFT =  arc->surfaceSet[surfaceSetCount]->surface[0].featureSet[0].num;
+    arc->num_F_points_NFT =  arc->surfaceSet[surfaceSetCount]->surface[0].featureSet[0].list[0].num;
 
 		ARLOGi("NFT num. of ImageSet: %i\n", numIset);
 		ARLOGi("NFT marker width: %i\n", arc->width_NFT);
 		ARLOGi("NFT marker width: %i\n", arc->height_NFT);
 		ARLOGi("NFT marker dpi: %i\n", arc->dpi_NFT);
+    ARLOGi("NFT Number of Feature sets: %i\n", arc->num_F_set_NFT);
+    ARLOGi("NFT Num. of feature points: %d\n", arc->num_F_points_NFT);
 
 		ARLOGi("  Done.\n");
 
