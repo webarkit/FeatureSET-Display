@@ -18,7 +18,6 @@ var ARfset = function(width, height){
   this.frameIbwpointer = null;
   this.dataHeap = null;
   this.imgBW = null;
-  console.log(document);
 
   if (typeof document !== 'undefined') {
       this.canvas = document.createElement('canvas');
@@ -36,6 +35,7 @@ ARfset.prototype.display = function () {
     // Display Image set
     var buffer = new Uint8ClampedArray(this.framesize);
     buffer.set(this.imgBW);
+    console.log(buffer);
     var bwImageData = new ImageData(buffer, this.canvas.width, this.canvas.height);
     this.ctx.putImageData(bwImageData, 0, 0);
 };
