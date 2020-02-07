@@ -19,6 +19,7 @@ struct arFset {
   int width = 0;
   int height = 0;
   ARUint8 *videoFrame = NULL;
+  ARUint8 *imgBW = NULL;
 	int videoFrameSize;
   AR2ImageSetT *imageSet = NULL;
   AR2SurfaceSetT      *surfaceSet[PAGES_MAX];
@@ -121,6 +122,7 @@ extern "C" {
 		arc->dpi_NFT = arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->scale[0]->dpi;
     arc->num_F_set_NFT =  arc->surfaceSet[surfaceSetCount]->surface[0].featureSet[0].num;
     arc->num_F_points_NFT =  arc->surfaceSet[surfaceSetCount]->surface[0].featureSet[0].list[0].num;
+    arc->imgBW = arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->scale[0]->imgBW;
 
 		ARLOGi("NFT num. of ImageSet: %i\n", numIset);
 		ARLOGi("NFT marker width: %i\n", arc->width_NFT);
@@ -128,6 +130,7 @@ extern "C" {
 		ARLOGi("NFT marker dpi: %i\n", arc->dpi_NFT);
     ARLOGi("NFT Number of Feature sets: %i\n", arc->num_F_set_NFT);
     ARLOGi("NFT Num. of feature points: %d\n", arc->num_F_points_NFT);
+    ARLOGi("imgBW filled\n");
 
 		ARLOGi("  Done.\n");
 
@@ -163,6 +166,7 @@ extern "C" {
 
 		arc->videoFrameSize = width * height * 4 * sizeof(ARUint8);
 		arc->videoFrame = (ARUint8*) malloc(arc->videoFrameSize);
+    arc->imgBW = (ARUint8*) malloc(arc->videoFrameSize / 4);
     arc->imageSet = (AR2ImageSetT*) malloc(arc->videoFrameSize);
 
     ARLOGi("Allocated videoFrameSize %d\n", arc->videoFrameSize);
@@ -174,11 +178,13 @@ extern "C" {
 			var frameMalloc = arfset["frameMalloc"];
 			frameMalloc["framepointer"] = $1;
 			frameMalloc["frameIsetpointer"] = $2;
-      frameMalloc["framesize"] = $3;
+      frameMalloc["frameIbwpointer"] = $3;
+      frameMalloc["framesize"] = $4;
 		},
 			arc->id,
 			arc->videoFrame,
       arc->imageSet,
+      arc->imgBW,
 			arc->videoFrameSize
 		);
 

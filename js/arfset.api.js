@@ -15,7 +15,9 @@ var ARfset = function(width, height){
   this.framepointer = null;
   this.framesize = null;
   this.frameIsetpointer = null;
+  this.frameIbwpointer = null;
   this.dataHeap = null;
+  this.imgBW = null;
   this._init(width, height);
 }
 
@@ -84,8 +86,10 @@ ARfset.prototype._init = function(width, height){
   this.framepointer = params.framepointer;
   this.framesize = params.framesize;
   this.frameIsetpointer = params.frameIsetpointer;
+  this.frameIbwpointer = params.frameIbwpointer;
 
   this.dataHeap = new Uint8Array(Module.HEAPU8.buffer, this.framepointer, this.framesize);
+  this.imgBW = new Uint8Array(Module.HEAPU8.buffer, this.frameIbwpointer, this.framesize / 4);
 }
 
 var iset_w_count = 0;
