@@ -50,8 +50,8 @@ var ARfset = function(width, height){
 
 ARfset.prototype.display = function () {
     document.body.appendChild(this.canvas);
-
-    var debugBuffer = new Uint8ClampedArray(Module.HEAPU8.buffer, this.frameIbwpointer, this.frameimgBWsize);
+    var size = this.canvas.width * this.canvas.height;
+    var debugBuffer = new Uint8ClampedArray(Module.HEAPU8.buffer, this.frameIbwpointer, size);
     var id = new ImageData(new Uint8ClampedArray(this.canvas.width * this.canvas.height*4), this.canvas.width, this.canvas.height);
     for (var i = 0, j = 0; i < debugBuffer.length; i++ , j += 4) {
         var v = debugBuffer[i];
