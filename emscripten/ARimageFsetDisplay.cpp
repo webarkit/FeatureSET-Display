@@ -161,15 +161,10 @@ extern "C" {
     int id = gARFsetID++;
 		arFset *arc = &(arFsets[id]);
 		arc->id = id;
-
     arc->width = width;
 		arc->height = height;
     arc->imgBWsize = arc->width_NFT * arc->height_NFT * sizeof(ARUint8);
-
-		arc->videoFrameSize = width * height * 4 * sizeof(ARUint8);
-		arc->videoFrame = (ARUint8*) malloc(arc->videoFrameSize);
     arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
-    arc->imageSet = (AR2ImageSetT*) malloc(arc->videoFrameSize);
 
     ARLOGi("Allocated videoFrameSize %d\n", arc->videoFrameSize);
 
@@ -178,18 +173,12 @@ extern "C" {
 				arfset["frameMalloc"] = ({});
 			}
 			var frameMalloc = arfset["frameMalloc"];
-			frameMalloc["framepointer"] = $1;
-			frameMalloc["frameIsetpointer"] = $2;
-      frameMalloc["frameIbwpointer"] = $3;
-      frameMalloc["frameimgBWsize"] = $4;
-      frameMalloc["framesize"] = $5;
+      frameMalloc["frameIbwpointer"] = $1;
+      frameMalloc["frameimgBWsize"] = $2;
 		},
 			arc->id,
-			arc->videoFrame,
-      arc->imageSet,
       arc->imgBW,
-      arc->imgBWsize,
-			arc->videoFrameSize
+      arc->imgBWsize
 		);
 
 		return arc->id;
