@@ -166,7 +166,8 @@ extern "C" {
     arc->imgBWsize = arc->width_NFT * arc->height_NFT * sizeof(ARUint8);
     arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
 
-    ARLOGi("Allocated videoFrameSize %d\n", arc->videoFrameSize);
+    ARLOGi("marker width %d\n", arc->width_NFT);
+    ARLOGi("Allocated imgBWsize %d\n", arc->imgBWsize);
 
     EM_ASM_({
 			if (!arfset["frameMalloc"]) {
