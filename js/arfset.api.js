@@ -10,11 +10,7 @@ if (typeof window !== 'undefined') {
 var ARfset = function(width, height){
   this.id = 0;
   this.nftMarkerCount = 0;
-  this.imageSet = null;
   this.imageSetWidth = 0;
-  this.framepointer = null;
-  this.framesize = null;
-  this.frameIsetpointer = null;
   this.frameIbwpointer = null;
   this.dataHeap = null;
   this.imgBW = null;
@@ -108,14 +104,11 @@ ARfset.prototype._init = function(width, height){
   this.id = arfset.setup(width, height);
 
   var params = arfset.frameMalloc;
-  this.framepointer = params.framepointer;
-  this.framesize = params.framesize;
-  this.frameIsetpointer = params.frameIsetpointer;
   this.frameIbwpointer = params.frameIbwpointer;
   this.frameimgBWsize = params.frameimgBWsize;
 
-  this.dataHeap = new Uint8Array(Module.HEAPU8.buffer, this.framepointer, this.framesize);
-  this.imgBW = new Uint8Array(Module.HEAPU8.buffer, this.frameIbwpointer, this.frameimgBWsize);
+  //this.dataHeap = new Uint8Array(Module.HEAPU8.buffer, this.framepointer, this.framesize);
+  //this.imgBW = new Uint8Array(Module.HEAPU8.buffer, this.frameIbwpointer, this.frameimgBWsize);
 }
 
 var iset_w_count = 0;
