@@ -18,6 +18,7 @@ var ARfset = function(width, height){
   this.frameIbwpointer = null;
   this.dataHeap = null;
   this.imgBW = null;
+  this.frameimgBWsize = null;
 
   if (typeof document !== 'undefined') {
       this.canvas = document.createElement('canvas');
@@ -32,12 +33,17 @@ var ARfset = function(width, height){
 ARfset.prototype.display = function () {
     document.body.appendChild(this.canvas);
 
-    // Display Image set
-    var buffer = new Uint8ClampedArray(this.framesize);
-    buffer.set(this.imgBW);
-    console.log(buffer);
-    var bwImageData = new ImageData(buffer, this.canvas.width, this.canvas.height);
-    this.ctx.putImageData(bwImageData, 0, 0);
+    var debugBuffer = new Uint8ClampedArray(Module.HEAPU8.buffer, this.frameIbwpointer, this.frameimgBWsize);
+    var id = new ImageData(new Uint8ClampedArray(this.canvas.width * this.canvas.height*4), this.canvas.width, this.canvas.height);
+    for (var i = 0, j = 0; i < debugBuffer.length; i++ , j += 4) {
+        var v = debugBuffer[i];
+        id.data[j + 0] = v;
+        id.data[j + 1] = v;
+        id.data[j + 2] = v;
+        id.data[j + 3] = 255;
+    }
+
+    this.ctx.putImageData(id, 0, 0);
 };
 
 ARfset.prototype.getImageSetWidth = function(url, callback, onError){
@@ -106,9 +112,10 @@ ARfset.prototype._init = function(width, height){
   this.framesize = params.framesize;
   this.frameIsetpointer = params.frameIsetpointer;
   this.frameIbwpointer = params.frameIbwpointer;
+  this.frameimgBWsize = params.frameimgBWsize;
 
   this.dataHeap = new Uint8Array(Module.HEAPU8.buffer, this.framepointer, this.framesize);
-  this.imgBW = new Uint8Array(Module.HEAPU8.buffer, this.frameIbwpointer, this.framesize / 4);
+  this.imgBW = new Uint8Array(Module.HEAPU8.buffer, this.frameIbwpointer, this.frameimgBWsize);
 }
 
 var iset_w_count = 0;
