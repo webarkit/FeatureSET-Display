@@ -59,7 +59,7 @@ extern "C" {
 
 		ARLOGi("NFT num. of ImageSet: %i\n", numIset);
 		ARLOGi("NFT marker width: %i\n", arc->width_NFT);
-		ARLOGi("NFT marker width: %i\n", arc->height_NFT);
+		ARLOGi("NFT marker height: %i\n", arc->height_NFT);
 		ARLOGi("NFT marker dpi: %i\n", arc->dpi_NFT);
     ARLOGi("NFT Number of Feature sets: %i\n", arc->num_F_set_NFT);
     ARLOGi("NFT Num. of feature points: %d\n", arc->num_F_points_NFT);
