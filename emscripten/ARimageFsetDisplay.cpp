@@ -107,7 +107,7 @@ extern "C" {
 
   }*/
 
-  int loadNFTMarker(arFset *arc, int surfaceSetCount, const char* datasetPathname) {
+  ARUint8 * loadNFTMarker(arFset *arc, int surfaceSetCount, const char* datasetPathname) {
 		int i, pageNo, numIset, width, height, dpi;
 
 		// Load AR2 data.
@@ -138,23 +138,39 @@ extern "C" {
 	  if (surfaceSetCount == PAGES_MAX) exit(-1);
 
 		ARLOGi("Loading of NFT data complete.\n");
-		return (TRUE);
+		return arc->imgBW;
 	}
 
   int readNFTMarker(int id, std::string datasetPathname) {
 		if (arFsets.find(id) == arFsets.end()) { return -1; }
 		arFset *arc = &(arFsets[id]);
+    ARUint8 * Imgbw;
 
 		// Load marker(s).
 		int patt_id = arc->surfaceSetCount;
 		if (!loadNFTMarker(arc, patt_id, datasetPathname.c_str())) {
 			ARLOGe("ARimageFsetDisplay(): Unable to read NFT marker.\n");
 			return -1;
-		}
+		} else {
+      Imgbw = loadNFTMarker(arc, patt_id, datasetPathname.c_str());
+    }
 
 		arc->surfaceSetCount++;
 
-		return patt_id;
+    /*EM_ASM_({
+			if (!arfset["frameMalloc"]) {
+				arfset["frameMalloc"] = ({});
+			}
+			var frameMalloc = arfset["frameMalloc"];
+      frameMalloc["frameIbwpointer"] = $1;
+      //frameMalloc["frameimgBWsize"] = $2;
+		},
+			0,
+      Imgbw
+      //arc->imgBWsize
+		);*/
+
+		return (int)Imgbw;
 	}
 
   int setup(int width, int height){
