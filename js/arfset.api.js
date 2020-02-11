@@ -41,42 +41,6 @@ ARfset.prototype.display = function () {
     this.ctx.putImageData(id, 0, 0);
 };
 
-ARfset.prototype.getImageSetWidth = function(url, callback, onError){
-  if (url) {
-    console.log(url);
-    var self = this;
-    return arfset.getIsetWidth(url, function(width){
-      console.log(width);
-      self.imageSetWidth = width;
-      callback(width)
-    }, onError)
-  } else {
-      if (onError) {
-          onError("Iset URL needs to be defined and not equal empty string!");
-      }
-      else {
-          console.error("Iset URL needs to be defined and not equal empty string!");
-      }
-    }
-};
-
-ARfset.prototype.loadImageSet = function(url, callback, onError){
-  if (url) {
-    console.log(url);
-    arfset.readImageSet(url, function(iset){
-      console.log(iset);
-      callback(iset)
-    }, onError)
-  } else {
-      if (onError) {
-          onError("Iset URL needs to be defined and not equal empty string!");
-      }
-      else {
-          console.error("Iset URL needs to be defined and not equal empty string!");
-      }
-    }
-};
-
 ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
     var self = this;
     if (markerURL) {
@@ -106,31 +70,6 @@ ARfset.prototype._init = function(width, height){
   this.frameIbwpointer = params.frameIbwpointer;
   //this.frameimgBWsize = params.frameimgBWsize;
 }
-
-var iset_w_count = 0;
-
-function getIsetWidth(url, callback, onError){
-  var filename = '/getIsetW_' + iset_w_count++;
-  ajax(url, filename, function () {
-    console.log(filename);
-      var width = Module._getIsetWidth(0, filename);
-      console.log(width);
-      if (callback) callback(width);
-  }, function (errorNumber) { if (onError) onError(errorNumber) });
-  };
-
-
-var iset_count = 0;
-
-function readImageSet(url, callback, onError){
-  var filename = '/readIset_' + iset_count++;
-  ajax(url, filename, function () {
-    console.log(filename);
-      var iset = Module._readImageSet(filename);
-      console.log(iset);
-      if (callback) callback(iset);
-  }, function (errorNumber) { if (onError) onError(errorNumber) });
-};
 
 var marker_count = 0;
 
@@ -186,8 +125,7 @@ function ajax(url, target, callback, errorCallback) {
 }
 
 var arfset = {
-  readImageSet: readImageSet,
-  getIsetWidth: getIsetWidth,
+
   readNFTMarker: readNFTMarker
 
 }
@@ -195,8 +133,6 @@ var arfset = {
 var FUNCTIONS = [
   'setup',
   'display',
-  'loadImageSet',
-  'getImageSetWidth',
   'getImageSet'
 ];
 
