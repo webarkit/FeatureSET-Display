@@ -84,35 +84,39 @@ extern "C" {
 			ARLOGe("ARimageFsetDisplay(): Unable to read NFT marker.\n");
 			return -1;
 		} else {
-      ARLOGi("Passing the imgBW pointer.\n");
+      ARLOGi("Passing the imgBW pointer: %d\n", (int)arc->imgBW);
     }
 
 		arc->surfaceSetCount++;
+    arc->imgBWsize =  arc->width_NFT * arc->height_NFT * sizeof(ARUint8);
+    ARLOGi("imgsizePointer: %d\n", arc->imgBWsize);
 
-    EM_ASM_({
+    /*EM_ASM_({
 			if (!arfset["frameMalloc"]) {
 				arfset["frameMalloc"] = ({});
 			}
 			var frameMalloc = arfset["frameMalloc"];
-      frameMalloc["frameIbwpointer"] = $1;
-      //frameMalloc["frameimgBWsize"] = $2;
+      //frameMalloc["frameIbwpointer"] = $1;
+      frameMalloc["frameimgBWsize"] = $1;
 		},
 			0,
-      arc->imgBW
-      //arc->imgBWsize
-		);
+      //arc->imgBW,
+      arc->imgBWsize
+		);*/
 
 		return (int)arc->imgBW;
 	}
 
-  /*int setup(int width, int height){
+  int setup(int width, int height){
     int id = gARFsetID++;
 		arFset *arc = &(arFsets[id]);
 		arc->id = id;
     arc->width = width;
 		arc->height = height;
-    arc->imgBWsize = arc->width_NFT * arc->height_NFT * sizeof(ARUint8);
-    arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
+    width = 893;
+    height = 1117;
+    arc->imgBWsize = width * height * sizeof(ARUint8);
+    //arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
 
     ARLOGi("marker width %d\n", arc->width_NFT);
     ARLOGi("Allocated imgBWsize %d\n", arc->imgBWsize);
@@ -131,7 +135,7 @@ extern "C" {
 		);
 
 		return arc->id;
-  }*/
+  }
 
 }
 
