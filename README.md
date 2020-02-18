@@ -21,3 +21,7 @@ Display of various imageSet and FeatureSet infos:
 
 - display the ImageSet (the entire array of images as a choice)
 - display the features points used in identifying and features points used in continuous tracking.
+
+### Example
+
+An example is included in the **example** folder. Run a http server (python or node) and open the **example.html** file.
