@@ -57,12 +57,12 @@ extern "C" {
     arc->num_F_points_NFT =  arc->surfaceSet[surfaceSetCount]->surface[0].featureSet[0].list[0].num;
     arc->imgBW = arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->scale[0]->imgBW;
 
-		ARLOGi("NFT num. of ImageSet: %i\n", numIset);
+		ARLOGi("NFT number of ImageSet: %i\n", numIset);
 		ARLOGi("NFT marker width: %i\n", arc->width_NFT);
 		ARLOGi("NFT marker height: %i\n", arc->height_NFT);
 		ARLOGi("NFT marker dpi: %i\n", arc->dpi_NFT);
-    ARLOGi("NFT Number of Feature sets: %i\n", arc->num_F_set_NFT);
-    ARLOGi("NFT Num. of feature points: %d\n", arc->num_F_points_NFT);
+    ARLOGi("NFT number of Feature sets: %i\n", arc->num_F_set_NFT);
+    ARLOGi("NFT number of feature points: %d\n", arc->num_F_points_NFT);
     ARLOGi("imgBW filled\n");
 
 		ARLOGi("  Done.\n");
@@ -76,7 +76,6 @@ extern "C" {
   int readNFTMarker(int id, std::string datasetPathname) {
 		if (arFsets.find(id) == arFsets.end()) { return -1; }
 		arFset *arc = &(arFsets[id]);
-    //ARUint8 * Imgbw;
 
 		// Load marker(s).
 		int patt_id = arc->surfaceSetCount;
@@ -118,7 +117,7 @@ extern "C" {
     arc->imgBWsize = width * height * sizeof(ARUint8);
     //arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
 
-    ARLOGi("marker width %d\n", arc->width_NFT);
+    ARLOGi("Marker width %d\n", arc->width_NFT);
     ARLOGi("Allocated imgBWsize %d\n", arc->imgBWsize);
 
     EM_ASM_({
