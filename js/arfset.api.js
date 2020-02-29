@@ -40,6 +40,7 @@ ARfset.prototype.display = function () {
     }
 
     this.ctx.putImageData(id, 0, 0);
+    Module._free(debugBuffer);
 };
 
 ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {

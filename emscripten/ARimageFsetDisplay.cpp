@@ -69,6 +69,19 @@ extern "C" {
 
 	  if (surfaceSetCount == PAGES_MAX) exit(-1);
 
+    EM_ASM_({
+			if (!arfset["frameMalloc"]) {
+				arfset["frameMalloc"] = ({});
+			}
+			var frameMalloc = arfset["frameMalloc"];
+      frameMalloc["frameIbwpointer"] = $1;
+      //frameMalloc["frameimgBWsize"] = $1;
+		},
+			0,
+      arc->imgBW
+      //arc->imgBWsize
+		);
+
 		ARLOGi("Loading of NFT data complete.\n");
 		return (TRUE);
 	}
@@ -125,11 +138,11 @@ extern "C" {
 				arfset["frameMalloc"] = ({});
 			}
 			var frameMalloc = arfset["frameMalloc"];
-      frameMalloc["frameIbwpointer"] = $1;
-      frameMalloc["frameimgBWsize"] = $2;
+      //frameMalloc["frameIbwpointer"] = $1;
+      frameMalloc["frameimgBWsize"] = $1;
 		},
 			arc->id,
-      arc->imgBW,
+      //arc->imgBW,
       arc->imgBWsize
 		);
 
