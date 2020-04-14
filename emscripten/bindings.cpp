@@ -10,5 +10,9 @@ EMSCRIPTEN_BINDINGS(constant_bindings) {
   value_object<nftMarker>("nftMarker")
   .field("width", &nftMarker::widthNFT)
   .field("height", &nftMarker::heightNFT)
-  .field("dpi", &nftMarker::dpiNFT);
+  .field("dpi", &nftMarker::dpiNFT)
+  .field("numFsets", &nftMarker::numFsets)
+  .field("numFpoints", &nftMarker::numFpoints)
+  .field("imgBWsize", &nftMarker::imgBWsize)
+  .field("pointer", &nftMarker::pointer);
 }

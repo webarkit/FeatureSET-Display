@@ -18,6 +18,10 @@ struct nftMarker {
   int widthNFT;
 	int heightNFT;
 	int dpiNFT;
+  int numFsets;
+  int numFpoints;
+  int imgBWsize;
+  int pointer;
 };
 
 struct arFset {
@@ -125,8 +129,11 @@ extern "C" {
     nft.widthNFT = arc->width_NFT;
     nft.heightNFT = arc->height_NFT;
     nft.dpiNFT = arc->dpi_NFT;
+    nft.numFsets = arc->num_F_set_NFT;
+    nft.numFpoints = arc->num_F_points_NFT;
+    nft.imgBWsize = arc->imgBWsize;
+    nft.pointer = (int)arc->imgBW;
 
-		//return (int)arc->imgBW;
     return nft;
 	}
 
