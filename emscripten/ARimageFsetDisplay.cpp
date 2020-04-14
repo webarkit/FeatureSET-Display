@@ -14,6 +14,12 @@
 
 #define PAGES_MAX               10          // Maximum number of pages expected. You can change this down (to save memory) or up (to accomodate more pages.)
 
+struct nftMarker {
+  int widthNFT;
+	int heightNFT;
+	int dpiNFT;
+};
+
 struct arFset {
   int id;
   int width = 0;
@@ -86,15 +92,16 @@ extern "C" {
 		return (TRUE);
 	}
 
-  int readNFTMarker(int id, std::string datasetPathname) {
-		if (arFsets.find(id) == arFsets.end()) { return -1; }
+  nftMarker readNFTMarker(int id, std::string datasetPathname) {
+    nftMarker nft;
+		if (arFsets.find(id) == arFsets.end()) { return nft; }
 		arFset *arc = &(arFsets[id]);
 
 		// Load marker(s).
 		int patt_id = arc->surfaceSetCount;
 		if (!loadNFTMarker(arc, patt_id, datasetPathname.c_str())) {
 			ARLOGe("ARimageFsetDisplay(): Unable to read NFT marker.\n");
-			return -1;
+			return nft;
 		} else {
       ARLOGi("Passing the imgBW pointer: %d\n", (int)arc->imgBW);
     }
@@ -115,8 +122,12 @@ extern "C" {
       //arc->imgBW,
       arc->imgBWsize
 		);*/
+    nft.widthNFT = arc->width_NFT;
+    nft.heightNFT = arc->height_NFT;
+    nft.dpiNFT = arc->dpi_NFT;
 
-		return (int)arc->imgBW;
+		//return (int)arc->imgBW;
+    return nft;
 	}
 
   int setup(int width, int height){
@@ -130,7 +141,6 @@ extern "C" {
     arc->imgBWsize = width * height * sizeof(ARUint8);
     //arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
 
-    ARLOGi("Marker width %d\n", arc->width_NFT);
     ARLOGi("Allocated imgBWsize %d\n", arc->imgBWsize);
 
     EM_ASM_({
