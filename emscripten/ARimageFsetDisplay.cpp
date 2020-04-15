@@ -25,7 +25,7 @@ struct nftMarker {
 };
 
 struct arFset {
-  int id;
+  int id = 0;
   int width = 0;
   int height = 0;
   ARUint8 *videoFrame = NULL;
@@ -79,7 +79,7 @@ extern "C" {
 
 	  if (surfaceSetCount == PAGES_MAX) exit(-1);
 
-    EM_ASM_({
+    /*EM_ASM_({
 			if (!arfset["frameMalloc"]) {
 				arfset["frameMalloc"] = ({});
 			}
@@ -90,7 +90,7 @@ extern "C" {
 			0,
       arc->imgBW
       //arc->imgBWsize
-		);
+		);*/
 
 		ARLOGi("Loading of NFT data complete.\n");
 		return (TRUE);
@@ -119,13 +119,14 @@ extern "C" {
 				arfset["frameMalloc"] = ({});
 			}
 			var frameMalloc = arfset["frameMalloc"];
-      //frameMalloc["frameIbwpointer"] = $1;
-      frameMalloc["frameimgBWsize"] = $1;
+      frameMalloc["frameIbwpointer"] = $1;
+      frameMalloc["frameimgBWsize"] = $2;
 		},
 			0,
-      //arc->imgBW,
+      arc->imgBW,
       arc->imgBWsize
 		);*/
+
     nft.widthNFT = arc->width_NFT;
     nft.heightNFT = arc->height_NFT;
     nft.dpiNFT = arc->dpi_NFT;
@@ -141,12 +142,8 @@ extern "C" {
     int id = gARFsetID++;
 		arFset *arc = &(arFsets[id]);
 		arc->id = id;
-    arc->width = width;
-		arc->height = height;
-    width = 893;
-    height = 1117;
     arc->imgBWsize = width * height * sizeof(ARUint8);
-    //arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
+    arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
 
     ARLOGi("Allocated imgBWsize %d\n", arc->imgBWsize);
 
@@ -155,11 +152,11 @@ extern "C" {
 				arfset["frameMalloc"] = ({});
 			}
 			var frameMalloc = arfset["frameMalloc"];
-      //frameMalloc["frameIbwpointer"] = $1;
-      frameMalloc["frameimgBWsize"] = $1;
+      frameMalloc["frameIbwpointer"] = $1;
+      frameMalloc["frameimgBWsize"] = $2;
 		},
 			arc->id,
-      //arc->imgBW,
+      arc->imgBW,
       arc->imgBWsize
 		);
 

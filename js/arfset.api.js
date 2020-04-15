@@ -22,7 +22,6 @@ var ARfset = function(width, height){
       this.canvas.height = height;
       this.ctx = this.canvas.getContext('2d');
   }
-
   this._init(width, height);
 };
 
@@ -68,7 +67,6 @@ ARfset.prototype.getImageSet = function(){
 
 ARfset.prototype._init = function(width, height){
   this.id = arfset.setup(width, height);
-
   var params = arfset.frameMalloc;
   this.frameIbwpointer = params.frameIbwpointer;
   this.frameimgBWsize = params.frameimgBWsize;
