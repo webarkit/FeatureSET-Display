@@ -92,11 +92,11 @@ extern "C" {
       frameMalloc["frameimgBWsize"] = $1;
 		},
 			0,
-      arc->imgBW
+      arc->imgBW,
       arc->imgBWsize
 		);
 
-    ARLOGi("imgsizePointer: %d\n", arc->imgBWsize)
+    ARLOGi("imgsizePointer: %d\n", arc->imgBWsize);
 
 		ARLOGi("Loading of NFT data complete.\n");
 		return (TRUE);
