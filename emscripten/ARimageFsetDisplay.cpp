@@ -127,7 +127,7 @@ extern "C" {
     //arc->imgBWsize = arc->width_NFT * arc->height_NFT * sizeof(ARUint8);
     //ARLOGi("imgsizePointer: %d\n", arc->imgBWsize);
 
-    /*EM_ASM_({
+    EM_ASM_({
 			if (!arfset["frameMalloc"]) {
 				arfset["frameMalloc"] = ({});
 			}
@@ -138,7 +138,7 @@ extern "C" {
 			0,
       arc->imgBW,
       arc->imgBWsize
-		);*/
+		);
 
     nft.widthNFT = arc->width_NFT;
     nft.heightNFT = arc->height_NFT;
@@ -160,7 +160,7 @@ extern "C" {
 
     ARLOGi("Allocated imgBWsize %d\n", arc->imgBWsize);
 
-    EM_ASM_({
+    /*EM_ASM_({
 			if (!arfset["frameMalloc"]) {
 				arfset["frameMalloc"] = ({});
 			}
@@ -171,7 +171,7 @@ extern "C" {
 			arc->id,
       arc->imgBW,
       arc->imgBWsize
-		);
+		);*/
 
 		return arc->id;
   }
