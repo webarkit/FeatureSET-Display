@@ -155,7 +155,7 @@ extern "C" {
     int id = gARFsetID++;
 		arFset *arc = &(arFsets[id]);
 		arc->id = id;
-    arc->imgBWsize = width * height * sizeof(ARUint8);
+    arc->imgBWsize = width * height * 4 * sizeof(ARUint8);
     arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
 
     ARLOGi("Allocated imgBWsize %d\n", arc->imgBWsize);

@@ -29,7 +29,7 @@ ARfset.prototype.display = function () {
     document.body.appendChild(this.canvas);
     //var size = this.canvas.width * this.canvas.height * BYTES_PER_ELEMENT;
     var debugBuffer = new Uint8ClampedArray(Module.HEAPU8.buffer, this.frameIbwpointer, this.frameimgBWsize);
-    var id = new ImageData(new Uint8ClampedArray(this.frameimgBWsize*4), this.canvas.width, this.canvas.height);
+    var id = new ImageData(new Uint8ClampedArray(893*1117*4), this.canvas.width, this.canvas.height);
     for (var i = 0, j = 0; i < debugBuffer.length; i++ , j += 4) {
         var v = debugBuffer[i];
         id.data[j + 0] = v;

@@ -48,7 +48,7 @@ ARfset.prototype.display = function () {
     document.body.appendChild(this.canvas);
     //var size = this.canvas.width * this.canvas.height * BYTES_PER_ELEMENT;
     var debugBuffer = new Uint8ClampedArray(Module.HEAPU8.buffer, this.frameIbwpointer, this.frameimgBWsize);
-    var id = new ImageData(new Uint8ClampedArray(this.frameimgBWsize*4), this.canvas.width, this.canvas.height);
+    var id = new ImageData(new Uint8ClampedArray(893*1117*4), this.canvas.width, this.canvas.height);
     for (var i = 0, j = 0; i < debugBuffer.length; i++ , j += 4) {
         var v = debugBuffer[i];
         id.data[j + 0] = v;
@@ -40528,6 +40528,33 @@ function $28anonymous_20namespace_29__itanium_demangle__FunctionType__FunctionTy
  HEAP32[$0 + 16 >> 2] = $1;
  return $0;
 }
+function setup($0, $1) {
+ $0 = $0 | 0;
+ $1 = $1 | 0;
+ var $2 = 0, $3 = 0, $4 = 0, wasm2js_i32$0 = 0, wasm2js_i32$1 = 0;
+ $3 = global$0 - 32 | 0;
+ global$0 = $3;
+ $2 = HEAP32[10611];
+ HEAP32[10611] = $2 + 1;
+ HEAP32[$3 + 28 >> 2] = $2;
+ $2 = std____2__unordered_map_int_2c_20arFset_2c_20std____2__hash_int__2c_20std____2__equal_to_int__2c_20std____2__allocator_std____2__pair_int_20const_2c_20arFset__20__20___operator_5b_5d_28int_20const__29(42424, $3 + 28 | 0);
+ $4 = HEAP32[$3 + 28 >> 2];
+ $0 = Math_imul($0, $1) << 2;
+ HEAP32[$2 + 24 >> 2] = $0;
+ HEAP32[$2 >> 2] = $4;
+ wasm2js_i32$0 = $2, wasm2js_i32$1 = dlmalloc($0), HEAP32[wasm2js_i32$0 + 16 >> 2] = wasm2js_i32$1;
+ HEAP32[$3 + 16 >> 2] = HEAP32[$2 + 24 >> 2];
+ arLog(0, 1, 15733, $3 + 16 | 0);
+ $0 = HEAP32[$2 >> 2];
+ $1 = HEAP32[$2 + 16 >> 2];
+ HEAP32[$3 + 8 >> 2] = HEAP32[$2 + 24 >> 2];
+ HEAP32[$3 + 4 >> 2] = $1;
+ HEAP32[$3 >> 2] = $0;
+ emscripten_asm_const_int(15757, 15937, $3 | 0) | 0;
+ global$0 = $3 + 32 | 0;
+ $2 = HEAP32[$2 >> 2];
+ return $2 | 0;
+}
 function use_merged_upsample($0) {
  var $1 = 0, $2 = 0;
  label$1 : {
@@ -40572,33 +40599,6 @@ function std____2__unordered_map_int_2c_20arFset_2c_20std____2__hash_int__2c_20s
  $0 = HEAP32[std____2____hash_map_iterator_std____2____hash_iterator_std____2____hash_node_std____2____hash_value_type_int_2c_20arFset__2c_20void_____20_____hash_map_iterator_28std____2____hash_iterator_std____2____hash_node_std____2____hash_value_type_int_2c_20arFset__2c_20void_____29($1 + 8 | 0, std____2____hash_table_std____2____hash_value_type_int_2c_20arFset__2c_20std____2____unordered_map_hasher_int_2c_20std____2____hash_value_type_int_2c_20arFset__2c_20std____2__hash_int__2c_20true__2c_20std____2____unordered_map_equal_int_2c_20std____2____hash_value_type_int_2c_20arFset__2c_20std____2__equal_to_int__2c_20true__2c_20std____2__allocator_std____2____hash_value_type_int_2c_20arFset__20__20___end_28_29($0)) >> 2];
  global$0 = $1 + 16 | 0;
  return $0;
-}
-function setup($0, $1) {
- $0 = $0 | 0;
- $1 = $1 | 0;
- var $2 = 0, $3 = 0, $4 = 0, wasm2js_i32$0 = 0, wasm2js_i32$1 = 0;
- $3 = global$0 - 32 | 0;
- global$0 = $3;
- $2 = HEAP32[10611];
- HEAP32[10611] = $2 + 1;
- HEAP32[$3 + 28 >> 2] = $2;
- $2 = std____2__unordered_map_int_2c_20arFset_2c_20std____2__hash_int__2c_20std____2__equal_to_int__2c_20std____2__allocator_std____2__pair_int_20const_2c_20arFset__20__20___operator_5b_5d_28int_20const__29(42424, $3 + 28 | 0);
- $4 = HEAP32[$3 + 28 >> 2];
- $1 = Math_imul($0, $1);
- HEAP32[$2 + 24 >> 2] = $1;
- HEAP32[$2 >> 2] = $4;
- wasm2js_i32$0 = $2, wasm2js_i32$1 = dlmalloc($1), HEAP32[wasm2js_i32$0 + 16 >> 2] = wasm2js_i32$1;
- HEAP32[$3 + 16 >> 2] = HEAP32[$2 + 24 >> 2];
- arLog(0, 1, 15733, $3 + 16 | 0);
- $1 = HEAP32[$2 >> 2];
- $0 = HEAP32[$2 + 16 >> 2];
- HEAP32[$3 + 8 >> 2] = HEAP32[$2 + 24 >> 2];
- HEAP32[$3 + 4 >> 2] = $0;
- HEAP32[$3 >> 2] = $1;
- emscripten_asm_const_int(15757, 15937, $3 | 0) | 0;
- global$0 = $3 + 32 | 0;
- $2 = HEAP32[$2 >> 2];
- return $2 | 0;
 }
 function $28anonymous_20namespace_29__itanium_demangle__Node__20_28anonymous_20namespace_29__itanium_demangle__AbstractManglingParser__28anonymous_20namespace_29__itanium_demangle__ManglingParser__28anonymous_20namespace_29__DefaultAllocator__2c_20_28anonymous_20namespace_29__DefaultAllocator___make__28anonymous_20namespace_29__itanium_demangle__VectorType_2c_20_28anonymous_20namespace_29__itanium_demangle__Node___2c_20std__nullptr_t__28_28anonymous_20namespace_29__itanium_demangle__Node___2c_20std__nullptr_t___29($0, $1, $2) {
  return $28anonymous_20namespace_29__itanium_demangle__VectorType__20_28anonymous_20namespace_29__DefaultAllocator__makeNode__28anonymous_20namespace_29__itanium_demangle__VectorType_2c_20_28anonymous_20namespace_29__itanium_demangle__Node___2c_20std__nullptr_t__28_28anonymous_20namespace_29__itanium_demangle__Node___2c_20std__nullptr_t___29($0 + 416 | 0, $1, std__nullptr_t___20std____2__forward_std__nullptr_t__28std____2__remove_reference_std__nullptr_t___type__29($2));
