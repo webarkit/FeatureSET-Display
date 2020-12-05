@@ -48,6 +48,9 @@ ARfset.prototype.display = function () {
     document.body.appendChild(this.canvas);
     //var size = this.canvas.width * this.canvas.height * BYTES_PER_ELEMENT;
     var debugBuffer = new Uint8ClampedArray(Module.HEAPU8.buffer, this.frameIbwpointer, this.frameimgBWsize);
+    if (this.frameimgBWsize === (893*1117*4)) {
+        console.log('Gray image size is equal to image pointer size!');
+    }
     var id = new ImageData(new Uint8ClampedArray(893*1117*4), this.canvas.width, this.canvas.height);
     for (var i = 0, j = 0; i < debugBuffer.length; i++ , j += 4) {
         var v = debugBuffer[i];
@@ -58,7 +61,7 @@ ARfset.prototype.display = function () {
     }
 
     this.ctx.putImageData(id, 0, 0);
-    Module._free(debugBuffer);
+    //Module._free(debugBuffer);
 };
 
 ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
