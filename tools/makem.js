@@ -245,9 +245,9 @@ function addJob(job) {
 
 addJob(clean_builds);
 addJob(compile_arlib);
-//addJob(compile_combine);
+addJob(compile_combine);
 //addJob(compile_wasm);
-//addJob(compile_combine_min);
+addJob(compile_combine_min);
 
 if (NO_LIBAR == true){
   jobs.splice(1,1);
