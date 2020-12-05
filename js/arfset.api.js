@@ -22,13 +22,13 @@ var ARfset = function(width, height){
       this.canvas.height = height;
       this.ctx = this.canvas.getContext('2d');
   }
-  this._init(width, height);
+ 
 };
 
 ARfset.prototype.display = function () {
     document.body.appendChild(this.canvas);
     //var size = this.canvas.width * this.canvas.height * BYTES_PER_ELEMENT;
-    var debugBuffer = new Uint8ClampedArray(Module.HEAPU8.buffer, this.pointer, this.frameimgBWsize);
+    var debugBuffer = new Uint8ClampedArray(Module.HEAPU8.buffer, this.frameIbwpointer, this.frameimgBWsize);
     var id = new ImageData(new Uint8ClampedArray(this.frameimgBWsize*4), this.canvas.width, this.canvas.height);
     for (var i = 0, j = 0; i < debugBuffer.length; i++ , j += 4) {
         var v = debugBuffer[i];
@@ -45,10 +45,16 @@ ARfset.prototype.display = function () {
 ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
     var self = this;
     if (markerURL) {
+      this._init(1024, 1024);
       return arfset.readNFTMarker(this.id, markerURL, function (nftMarker) {
+        //this._init(640, 480);
           console.log(nftMarker);
-          self.pointer = nftMarker.pointer;
-          self.frameimgBWsize = nftMarker.imgBWsize;
+          var params = arfset.frameMalloc;
+          this.frameIbwpointer = params.frameIbwpointer;
+          this.frameimgBWsize = params.frameimgBWsize;
+          
+          //self.pointer = nftMarker.pointer;
+          //self.frameimgBWsize = nftMarker.imgBWsize;
       }, onError);
     } else {
       if (onError) {
