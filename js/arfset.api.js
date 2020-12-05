@@ -29,6 +29,7 @@ ARfset.prototype.display = function () {
     document.body.appendChild(this.canvas);
     //var size = this.canvas.width * this.canvas.height * BYTES_PER_ELEMENT;
     var debugBuffer = new Uint8ClampedArray(Module.HEAPU8.buffer, this.frameIbwpointer, this.frameimgBWsize);
+    console.log(debugBuffer);
     if (this.frameimgBWsize === (893*1117*4)) {
         console.log('Gray image size is equal to image pointer size!');
     }
