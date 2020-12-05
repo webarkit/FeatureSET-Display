@@ -58,6 +58,25 @@ extern "C" {
 		if ((arc->surfaceSet[surfaceSetCount] = ar2ReadSurfaceSet(datasetPathname, "fset", NULL)) == NULL ) {
 		    ARLOGe("Error reading data from %s.fset\n", datasetPathname);
 		}
+    
+    // this doesn't work!
+    /*width = arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->scale[0]->xsize;
+    height = arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->scale[0]->ysize;
+    arc->imgBWsize = width * height * sizeof(ARUint8);
+    arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
+
+    EM_ASM_({
+			if (!arfset["frameMalloc"]) {
+				arfset["frameMalloc"] = ({});
+			}
+			var frameMalloc = arfset["frameMalloc"];
+      frameMalloc["frameIbwpointer"] = $1;
+      frameMalloc["frameimgBWsize"] = $1;
+		},
+			0,
+      arc->imgBW,
+      arc->imgBWsize
+		);*/
 
 		numIset = arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->num;
 		arc->width_NFT = arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->scale[0]->xsize;
@@ -65,10 +84,9 @@ extern "C" {
 		arc->dpi_NFT = arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->scale[0]->dpi;
     arc->num_F_set_NFT =  arc->surfaceSet[surfaceSetCount]->surface[0].featureSet[0].num;
     arc->num_F_points_NFT =  arc->surfaceSet[surfaceSetCount]->surface[0].featureSet[0].list[0].num;
-    width = arc->width_NFT;
-    height = arc->height_NFT;
-    arc->imgBWsize = width * height * sizeof(ARUint8);
-    arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
+    
+    //arc->imgBWsize = width * height * sizeof(ARUint8);
+    //arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
     arc->imgBW = arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->scale[0]->imgBW;
 
 		ARLOGi("NFT number of ImageSet: %i\n", numIset);
@@ -83,18 +101,7 @@ extern "C" {
 
 	  if (surfaceSetCount == PAGES_MAX) exit(-1);
 
-    EM_ASM_({
-			if (!arfset["frameMalloc"]) {
-				arfset["frameMalloc"] = ({});
-			}
-			var frameMalloc = arfset["frameMalloc"];
-      frameMalloc["frameIbwpointer"] = $1;
-      frameMalloc["frameimgBWsize"] = $1;
-		},
-			0,
-      arc->imgBW,
-      arc->imgBWsize
-		);
+   
 
     ARLOGi("imgsizePointer: %d\n", arc->imgBWsize);
 
@@ -148,7 +155,7 @@ extern "C" {
     int id = gARFsetID++;
 		arFset *arc = &(arFsets[id]);
 		arc->id = id;
-    /*arc->imgBWsize = width * height * sizeof(ARUint8);
+    arc->imgBWsize = width * height * sizeof(ARUint8);
     arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
 
     ARLOGi("Allocated imgBWsize %d\n", arc->imgBWsize);
@@ -164,7 +171,7 @@ extern "C" {
 			arc->id,
       arc->imgBW,
       arc->imgBWsize
-		);*/
+		);
 
 		return arc->id;
   }
