@@ -23,7 +23,7 @@ for (var j = 2; j < arguments.length; j++) {
 var HAVE_NFT = 1;
 
 var EMSCRIPTEN_ROOT = process.env.EMSCRIPTEN;
-var ARTOOLKIT5_ROOT = process.env.ARTOOLKIT5_ROOT || "../emscripten/artoolkit5";
+var WEBARKITLIB_ROOT = process.env.WEBARKITLIB_ROOT || path.resolve(__dirname, "../emscripten/WebARKitLib");
 
 if (!EMSCRIPTEN_ROOT) {
 	console.log("\nWarning: EMSCRIPTEN environment variable not found.")
@@ -47,20 +47,29 @@ var MAIN_SOURCES = [
 	'ARimageFsetDisplay.cpp',
 ];
 
+if (!fs.existsSync(path.resolve(WEBARKITLIB_ROOT, 'include/AR/config.h'))) {
+	console.log("Renaming and moving config.h.in to config.h");
+	fs.copyFileSync(
+		path.resolve(WEBARKITLIB_ROOT, 'include/AR/config.h.in'),
+		path.resolve(WEBARKITLIB_ROOT, 'include/AR/config.h')
+	);
+	console.log("Done!");
+}
+
 MAIN_SOURCES = MAIN_SOURCES.map(function(src) {
 	return path.resolve(SOURCE_PATH, src);
 }).join(' ');
 
-let srcTest = path.resolve(__dirname, ARTOOLKIT5_ROOT + '/lib/SRC/');
+let srcTest = path.resolve(__dirname, WEBARKITLIB_ROOT + '/lib/SRC/');
 
 var ar_sources = [
-		'AR/*.c',
-    'Video/video.c',
-    'ARUtil/log.c',
-    'ARUtil/file_utils.c',
-		'AR/arUtil.c',
+	'AR/arLabelingSub/*.c',
+	'AR/*.c',
+	'ARICP/*.c',
+	'ARUtil/log.c',
+	'ARUtil/file_utils.c',
 ].map(function(src) {
-	return path.resolve(__dirname, ARTOOLKIT5_ROOT + '/lib/SRC/', src);
+	return path.resolve(__dirname, WEBARKITLIB_ROOT + '/lib/SRC/', src);
 });
 
 var ar2_sources = [
@@ -81,7 +90,7 @@ var ar2_sources = [
 	'coord.c',
 	'util.c',
 ].map(function(src) {
-	return path.resolve(__dirname, ARTOOLKIT5_ROOT + '/lib/SRC/AR2/', src);
+	return path.resolve(__dirname, WEBARKITLIB_ROOT + '/lib/SRC/AR2/', src);
 });
 
 var kpm_sources = [
@@ -105,7 +114,7 @@ var kpm_sources = [
 	'KPM/FreakMatcher/framework/logger.cpp',
 	'KPM/FreakMatcher/framework/timers.cpp',
 ].map(function(src) {
-	return path.resolve(__dirname, ARTOOLKIT5_ROOT + '/lib/SRC/', src);
+	return path.resolve(__dirname, WEBARKITLIB_ROOT + '/lib/SRC/', src);
 });
 
 if (HAVE_NFT) {
@@ -123,6 +132,8 @@ FLAGS += ' -s TOTAL_MEMORY=' + MEM + ' ';
 FLAGS += ' -s USE_ZLIB=1';
 FLAGS += ' -s USE_LIBJPEG';
 FLAGS += ' --memory-init-file 0 '; // for memless file
+FLAGS += ' -s "EXTRA_EXPORTED_RUNTIME_METHODS=[\'FS\']"';
+FLAGS += ' -s ALLOW_MEMORY_GROWTH=1';
 
 var PRE_FLAGS = ' --pre-js ' + path.resolve(__dirname, '../js/arfset.api.js') +' ';
 
@@ -138,10 +149,10 @@ DEBUG_FLAGS += ' -s ALLOW_MEMORY_GROWTH=1';
 DEBUG_FLAGS += '  -s DEMANGLE_SUPPORT=1 ';
 
 var INCLUDES = [
-	path.resolve(__dirname, ARTOOLKIT5_ROOT + '/include'),
+	path.resolve(__dirname, WEBARKITLIB_ROOT + '/include'),
 	OUTPUT_PATH,
 	SOURCE_PATH,
-	path.resolve(__dirname, ARTOOLKIT5_ROOT + '/lib/SRC/KPM/FreakMatcher'),
+	path.resolve(__dirname, WEBARKITLIB_ROOT + '/lib/SRC/KPM/FreakMatcher'),
 ].map(function(s) { return '-I' + s }).join(' ');
 
 function format(str) {
@@ -175,9 +186,9 @@ function clean_builds() {
 }
 
 var compile_arlib = format(EMCC + ' ' + INCLUDES + ' '
-	+ ar_sources.join(' ')
-	+ FLAGS + ' ' + DEFINES + ' -o {OUTPUT_PATH}libar.bc ',
-		OUTPUT_PATH);
+    + ar_sources.join(' ')
+    + FLAGS + ' ' + DEFINES + ' -r -o {OUTPUT_PATH}libar.bc ',
+    OUTPUT_PATH);
 
 var compile_combine = format(EMCC + ' ' + INCLUDES + ' '
 	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES + PRE_FLAGS
@@ -234,9 +245,9 @@ function addJob(job) {
 
 addJob(clean_builds);
 addJob(compile_arlib);
-addJob(compile_combine);
+//addJob(compile_combine);
 //addJob(compile_wasm);
-addJob(compile_combine_min);
+//addJob(compile_combine_min);
 
 if (NO_LIBAR == true){
   jobs.splice(1,1);
