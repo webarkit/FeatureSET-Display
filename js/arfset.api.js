@@ -45,16 +45,9 @@ ARfset.prototype.display = function () {
 ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
     var self = this;
     if (markerURL) {
-      this._init(1024, 1024);
+      this._init(897, 1117);
       return arfset.readNFTMarker(this.id, markerURL, function (nftMarker) {
-        //this._init(640, 480);
           console.log(nftMarker);
-          var params = arfset.frameMalloc;
-          this.frameIbwpointer = params.frameIbwpointer;
-          this.frameimgBWsize = params.frameimgBWsize;
-          
-          //self.pointer = nftMarker.pointer;
-          //self.frameimgBWsize = nftMarker.imgBWsize;
       }, onError);
     } else {
       if (onError) {
