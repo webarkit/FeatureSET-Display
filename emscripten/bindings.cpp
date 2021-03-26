@@ -17,4 +17,11 @@ EMSCRIPTEN_BINDINGS(constant_bindings) {
   .field("nftFeaturePoints", &nftMarker::nftFeaturePoints)
   .field("nftPoints", &nftMarker::nftPoints)
   .field("pointer", &nftMarker::pointer);
+
+  value_array<nftPoint>("nftPoint")
+  .element(&nftPoint::x)
+  .element(&nftPoint::y);
+  
+
+  register_vector<nftPoint>("vector<nftPoint>");
 }
