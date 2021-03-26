@@ -133,6 +133,8 @@ extern "C" {
       nft.nftPoints.push_back(nftPoint());
       nft.nftPoints[i].x = arc->F_points_NFT->coord[i].x;
       nft.nftPoints[i].y = arc->F_points_NFT->coord[i].y;
+      ARLOGi("points x: %d\n", nft.nftPoints[i].x);
+      ARLOGi("points y: %d\n", nft.nftPoints[i].y);
     }
 
     nft.widthNFT = arc->width_NFT;
