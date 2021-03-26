@@ -21,6 +21,7 @@ struct nftMarker {
   int numFsets;
   int numFpoints;
   int imgBWsize;
+  int nftFeaturePoints;
   int pointer;
 };
 
@@ -113,10 +114,12 @@ extern "C" {
 			var frameMalloc = arfset["frameMalloc"];
       frameMalloc["frameIbwpointer"] = $1;
       frameMalloc["frameimgBWsize"] = $2;
+      frameMalloc["frameFeaturePoints"] = $3
 		},
 			arc->id,
       arc->imgBW,
-      arc->imgBWsize
+      arc->imgBWsize,
+      arc->F_points_NFT
 		);
 
     nft.widthNFT = arc->width_NFT;
@@ -125,6 +128,7 @@ extern "C" {
     nft.numFsets = arc->num_F_set_NFT;
     nft.numFpoints = arc->num_F_points_NFT;
     nft.imgBWsize = arc->imgBWsize;
+    nft.nftFeaturePoints = (int)arc->F_points_NFT;
     nft.pointer = (int)arc->imgBW;
 
     return nft;
@@ -136,6 +140,7 @@ extern "C" {
 		arc->id = id;
     arc->imgBWsize = width * height * 4 * sizeof(ARUint8);
     arc->imgBW = (ARUint8*) malloc(arc->imgBWsize);
+    arc->F_points_NFT = (AR2FeaturePointsT *) malloc(arc->num_F_points_NFT*2);
 
     ARLOGi("Allocated imgBWsize %d\n", arc->imgBWsize);
 
