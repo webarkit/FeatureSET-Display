@@ -48,8 +48,8 @@ ARfset.prototype.display = function () {
             self.frameIbwpointer,
             self.frameimgBWsize
           );
-        var pointerFeaturePoints = new Uint8Array(
-          Module.HEAPU8.buffer,
+        var pointerFeaturePoints = new Uint32Array(
+          Module.HEAPU32.buffer,
           self.frameFeaturePoints,
           330
         )
@@ -175,6 +175,7 @@ var FUNCTIONS = [
   'display',
   'getImageSet'
 ];
+console.log(Module);
 
 function runWhenLoaded() {
     FUNCTIONS.forEach(function (n) {

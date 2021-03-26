@@ -14,6 +14,11 @@
 
 #define PAGES_MAX               10          // Maximum number of pages expected. You can change this down (to save memory) or up (to accomodate more pages.)
 
+struct nftPoint {
+  int x;
+  int y;
+};
+
 struct nftMarker {
   int widthNFT;
 	int heightNFT;
@@ -22,6 +27,7 @@ struct nftMarker {
   int numFpoints;
   int imgBWsize;
   int nftFeaturePoints;
+  std::vector<nftPoint> nftPoints;
   int pointer;
 };
 
@@ -79,6 +85,7 @@ extern "C" {
     ARLOGi("NFT number of Feature sets: %i\n", arc->num_F_set_NFT);
     ARLOGi("NFT number of feature points: %d\n", arc->num_F_points_NFT);
     ARLOGi("NFT Point x coord: %d\n",  arc->F_points_NFT->coord[0].x);
+    ARLOGi("NFT Point y coord: %d\n",  arc->F_points_NFT->coord[0].y);
     ARLOGi("imgBW filled\n");
 
 		ARLOGi("  Done.\n");
@@ -121,6 +128,12 @@ extern "C" {
       arc->imgBWsize,
       arc->F_points_NFT
 		);
+
+    for (int i=0; i<arc->num_F_points_NFT; i++){
+      nft.nftPoints.push_back(nftPoint());
+      nft.nftPoints[i].x = arc->F_points_NFT->coord[i].x;
+      nft.nftPoints[i].y = arc->F_points_NFT->coord[i].y;
+    }
 
     nft.widthNFT = arc->width_NFT;
     nft.heightNFT = arc->height_NFT;

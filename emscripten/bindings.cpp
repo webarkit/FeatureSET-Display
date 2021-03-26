@@ -15,5 +15,6 @@ EMSCRIPTEN_BINDINGS(constant_bindings) {
   .field("numFpoints", &nftMarker::numFpoints)
   .field("imgBWsize", &nftMarker::imgBWsize)
   .field("nftFeaturePoints", &nftMarker::nftFeaturePoints)
+  .field("nftPoints", &nftMarker::nftPoints)
   .field("pointer", &nftMarker::pointer);
 }
