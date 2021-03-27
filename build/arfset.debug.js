@@ -112,6 +112,7 @@ ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
             }
           });
           document.dispatchEvent(nftEvent);
+          onSuccess(nftMarker);
       }, onError);
     } else {
       if (onError) {
