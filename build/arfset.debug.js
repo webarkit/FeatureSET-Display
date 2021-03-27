@@ -97,6 +97,7 @@ ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
     if (markerURL) {
       return arfset.readNFTMarker(this.id, markerURL, function (nftMarker) {
           console.log(nftMarker);
+          console.log(nftMarker.nftPoints);
           var params = arfset.frameMalloc;
           self.frameIbwpointer = params.frameIbwpointer;
           self.frameimgBWsize = params.frameimgBWsize;
@@ -106,7 +107,8 @@ ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
               widthNFT: nftMarker.width,
               heightNFT: nftMarker.height,
               dpi: nftMarker.dpi,
-              pointerFeaturePoints: nftMarker.nftFeaturePoints
+              pointerFeaturePoints: nftMarker.nftFeaturePoints,
+              nftPoints: nftMarker.nftPoints
             }
           });
           document.dispatchEvent(nftEvent);
