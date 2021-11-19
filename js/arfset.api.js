@@ -70,6 +70,9 @@ ARfset.prototype.display = function () {
           }
     
           self.ctx.putImageData(id, 0, 0);
+
+          var imageEv = new Event('imageEv');
+          document.dispatchEvent(imageEv);
     
           Module._free(debugBuffer);
         })
