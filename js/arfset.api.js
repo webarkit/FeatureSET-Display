@@ -10,36 +10,72 @@ if (typeof window !== 'undefined') {
 var ARfset = function(width, height){
   this.id = 0;
   this.nftMarkerCount = 0;
+  this.numIset = 0;
   this.imageSetWidth = 0;
+  this.imageSetHeight = 0;
+  this.dpi = 0;
   this.frameIbwpointer = null;
-  this.pointer = null;
-  this.imgBW = null;
   this.frameimgBWsize = null;
-
-  if (typeof document !== 'undefined') {
-      this.canvas = document.createElement('canvas');
-      this.canvas.width = width;
-      this.canvas.height = height;
-      this.ctx = this.canvas.getContext('2d');
-  }
+  this.frameFeaturePoints = null;
+  this.numFpoints = null;
+  this.canvas = null;
+  this.ctx = null;
   this._init(width, height);
 };
 
-ARfset.prototype.display = function () {
-    document.body.appendChild(this.canvas);
-    //var size = this.canvas.width * this.canvas.height * BYTES_PER_ELEMENT;
-    var debugBuffer = new Uint8ClampedArray(Module.HEAPU8.buffer, this.pointer, this.frameimgBWsize);
-    var id = new ImageData(new Uint8ClampedArray(this.frameimgBWsize*4), this.canvas.width, this.canvas.height);
-    for (var i = 0, j = 0; i < debugBuffer.length; i++ , j += 4) {
-        var v = debugBuffer[i];
-        id.data[j + 0] = v;
-        id.data[j + 1] = v;
-        id.data[j + 2] = v;
-        id.data[j + 3] = 255;
-    }
+ARfset.prototype.createCanvas = function () {
+    if (typeof document !== "undefined") {
+      this.canvas = document.createElement("canvas");
+      this.canvas.id = "iSet";
+      this.ctx = this.canvas.getContext("2d");
+      console.log('canvas created');
+    };
+  };
 
-    this.ctx.putImageData(id, 0, 0);
-    Module._free(debugBuffer);
+ARfset.prototype.display = function () {
+    this.createCanvas();
+    document.body.appendChild(this.canvas);
+    var self = this;
+    document.addEventListener('nftMarker', function(ev) {
+        self.canvas.width = ev.detail.widthNFT;
+        self.canvas.height = ev.detail.heightNFT;
+        self.numIset = ev.detail.numIset;
+        self.imageSetWidth = ev.detail.widthNFT;
+        self.imageSetHeight = ev.detail.heightNFT;
+        self.frameFeaturePoints = ev.detail.pointerFeaturePoints;
+        self.numFpoints = ev.detail.numFpoints;
+        self.dpi = ev.detail.dpi;
+        var debugBuffer = new Uint8ClampedArray(
+            Module.HEAPU8.buffer,
+            self.frameIbwpointer,
+            self.frameimgBWsize
+          );
+        var pointerFeaturePoints = new Uint16Array(
+          Module.HEAPU16.buffer,
+          self.frameFeaturePoints,
+          self.numFpoints * 2
+        )
+        //console.log(pointerFeaturePoints);
+          var id = new ImageData(
+            new Uint8ClampedArray(self.canvas.width * self.canvas.height * 4),
+            self.canvas.width,
+            self.canvas.height
+          );
+          for (var i = 0, j = 0; i < debugBuffer.length; i++, j += 4) {
+            var v = debugBuffer[i];
+            id.data[j + 0] = v;
+            id.data[j + 1] = v;
+            id.data[j + 2] = v;
+            id.data[j + 3] = 255;
+          }
+    
+          self.ctx.putImageData(id, 0, 0);
+
+          var imageEv = new Event('imageEv');
+          document.dispatchEvent(imageEv);
+    
+          Module._free(debugBuffer);
+        })
 };
 
 ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
@@ -47,8 +83,23 @@ ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
     if (markerURL) {
       return arfset.readNFTMarker(this.id, markerURL, function (nftMarker) {
           console.log(nftMarker);
-          self.pointer = nftMarker.pointer;
-          self.frameimgBWsize = nftMarker.imgBWsize;
+          //console.log(nftMarker.nftPoints);
+          var params = arfset.frameMalloc;
+          self.frameIbwpointer = params.frameIbwpointer;
+          self.frameimgBWsize = params.frameimgBWsize;
+          var nftEvent = new CustomEvent('nftMarker', {
+            detail: {
+              numIset: nftMarker.numIset,
+              widthNFT: nftMarker.width,
+              heightNFT: nftMarker.height,
+              dpi: nftMarker.dpi,
+              numFpoints: nftMarker.numFpoints,
+              pointerFeaturePoints: nftMarker.nftFeaturePoints,
+              nftPoints: nftMarker.nftPoints
+            }
+          });
+          document.dispatchEvent(nftEvent);
+          onSuccess(nftMarker);
       }, onError);
     } else {
       if (onError) {
@@ -67,9 +118,6 @@ ARfset.prototype.getImageSet = function(){
 
 ARfset.prototype._init = function(width, height){
   this.id = arfset.setup(width, height);
-  var params = arfset.frameMalloc;
-  this.frameIbwpointer = params.frameIbwpointer;
-  this.frameimgBWsize = params.frameimgBWsize;
 }
 
 var marker_count = 0;
@@ -136,6 +184,7 @@ var FUNCTIONS = [
   'display',
   'getImageSet'
 ];
+console.log(Module);
 
 function runWhenLoaded() {
     FUNCTIONS.forEach(function (n) {
