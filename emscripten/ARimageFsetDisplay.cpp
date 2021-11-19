@@ -43,6 +43,7 @@ struct arFset {
   int imgBWsize;
   AR2ImageSetT *imageSet = NULL;
   AR2SurfaceSetT *surfaceSet[PAGES_MAX];
+  KpmRefDataSet           *refDataSet;
   int width_NFT;
   int height_NFT;
   int dpi_NFT;
@@ -60,6 +61,7 @@ static int gARFsetID = 0;
 extern "C" {
 
 extern void writeFP(int x, int y);
+extern void writeFS(int x, int y);
 
 int loadNFTMarker(arFset *arc, int surfaceSetCount,
                   const char *datasetPathname) {
@@ -102,6 +104,15 @@ int loadNFTMarker(arFset *arc, int surfaceSetCount,
   ARLOGi("imgBW filled\n");
 
   ARLOGi("  Done.\n");
+
+  ARLOGi("Read FeatureSet3.\n");
+  kpmLoadRefDataSet( datasetPathname, "fset3", &arc->refDataSet );
+  if( arc->refDataSet == NULL ) {
+      ARLOGe("file open error: %s.fset3\n", datasetPathname );
+      exit(0);
+  }
+  ARLOGi("  end.\n");
+  ARLOGi("num = %d\n", arc->refDataSet->num);
 
   if (surfaceSetCount == PAGES_MAX)
     exit(-1);
@@ -152,6 +163,10 @@ nftMarker readNFTMarker(int id, std::string datasetPathname) {
 
   for (int i = 0; i < arc->num_F_points_NFT; i++) {
     writeFP(arc->F_points_NFT->coord[i].x, arc->F_points_NFT->coord[i].y);
+  }
+
+  for (int i = 0; i < arc->refDataSet->num; i++) {
+    writeFS(arc->refDataSet->refPoint[i].coord2D.x, arc->refDataSet->refPoint[i].coord2D.y);
   }
 
   nft.widthNFT = arc->width_NFT;
