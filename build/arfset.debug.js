@@ -26986,6 +26986,87 @@ function start_pass_main($0, $1) {
  FUNCTION_TABLE[HEAP32[$1 >> 2]]($0);
 }
 
+function readNFTMarker($0, $1, $2) {
+ $0 = $0 | 0;
+ $1 = $1 | 0;
+ $2 = $2 | 0;
+ var $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, wasm2js_i32$0 = 0, wasm2js_i32$1 = 0;
+ $3 = __stack_pointer - 96 | 0;
+ __stack_pointer = $3;
+ HEAP32[$3 + 92 >> 2] = $1;
+ $5 = nftMarker__nftMarker_28_29($0);
+ wasm2js_i32$0 = $3, wasm2js_i32$1 = std____2__unordered_map_int_2c_20arFset_2c_20std____2__hash_int__2c_20std____2__equal_to_int__2c_20std____2__allocator_std____2__pair_int_20const_2c_20arFset__20__20___find_28int_20const__29(43800, $3 + 92 | 0), 
+ HEAP32[wasm2js_i32$0 + 80 >> 2] = wasm2js_i32$1;
+ wasm2js_i32$0 = $3, wasm2js_i32$1 = std____2__unordered_map_int_2c_20arFset_2c_20std____2__hash_int__2c_20std____2__equal_to_int__2c_20std____2__allocator_std____2__pair_int_20const_2c_20arFset__20__20___end_28_29(43800), 
+ HEAP32[wasm2js_i32$0 + 88 >> 2] = wasm2js_i32$1;
+ label$1: {
+  if (std____2__operator___28std____2____hash_map_iterator_std____2____hash_iterator_std____2____hash_node_std____2____hash_value_type_int_2c_20arFset__2c_20void_____20__20const__2c_20std____2____hash_map_iterator_std____2____hash_iterator_std____2____hash_node_std____2____hash_value_type_int_2c_20arFset__2c_20void_____20__20const__29($3 + 80 | 0, $3 + 88 | 0)) {
+   break label$1;
+  }
+  $1 = std____2__unordered_map_int_2c_20arFset_2c_20std____2__hash_int__2c_20std____2__equal_to_int__2c_20std____2__allocator_std____2__pair_int_20const_2c_20arFset__20__20___operator_5b_5d_28int_20const__29(43800, $3 + 92 | 0);
+  loadNFTMarker($1, HEAP32[$1 + 96 >> 2], std____2__basic_string_char_2c_20std____2__char_traits_char__2c_20std____2__allocator_char__20___c_str_28_29_20const($2));
+  HEAP32[$3 + 64 >> 2] = HEAP32[$1 + 16 >> 2];
+  arLog(0, 1, 15776, $3 - -64 | 0);
+  HEAP32[$1 + 96 >> 2] = HEAP32[$1 + 96 >> 2] + 1;
+  $0 = HEAP32[$1 >> 2];
+  $2 = HEAP32[$1 + 16 >> 2];
+  $4 = HEAP32[$1 + 24 >> 2];
+  HEAP32[$3 + 60 >> 2] = HEAP32[$1 + 92 >> 2];
+  HEAP32[$3 + 56 >> 2] = $4;
+  HEAP32[$3 + 52 >> 2] = $2;
+  HEAP32[$3 + 48 >> 2] = $0;
+  emscripten_asm_const_int(43164, 15807, $3 + 48 | 0) | 0;
+  $2 = $5 + 28 | 0;
+  $0 = 0;
+  while (1) {
+   $4 = HEAP32[$1 + 88 >> 2];
+   if (($4 | 0) <= ($0 | 0)) {
+    while (1) {
+     if (($4 | 0) <= ($6 | 0)) {
+      HEAP32[$5 >> 2] = HEAP32[$1 + 72 >> 2];
+      HEAP32[$5 + 4 >> 2] = HEAP32[$1 + 76 >> 2];
+      HEAP32[$5 + 8 >> 2] = HEAP32[$1 + 80 >> 2];
+      $0 = HEAP32[$1 + 84 >> 2];
+      HEAP32[$5 + 16 >> 2] = $4;
+      HEAP32[$5 + 12 >> 2] = $0;
+      HEAP32[$5 + 20 >> 2] = HEAP32[$1 + 24 >> 2];
+      HEAP32[$5 + 24 >> 2] = HEAP32[$1 + 92 >> 2];
+      HEAP32[$5 + 40 >> 2] = HEAP32[$1 + 16 >> 2];
+      break label$1;
+     }
+     $0 = HEAP32[HEAP32[$1 + 92 >> 2] >> 2] + Math_imul($6, 20) | 0;
+     $2 = HEAP32[$0 + 4 >> 2];
+     HEAP32[$3 + 32 >> 2] = HEAP32[$0 >> 2];
+     HEAP32[$3 + 36 >> 2] = $2;
+     emscripten_asm_const_int(43383, 15840, $3 + 32 | 0) | 0;
+     $6 = $6 + 1 | 0;
+     $4 = HEAP32[$1 + 88 >> 2];
+     continue;
+    }
+   }
+   HEAP32[$3 + 80 >> 2] = 0;
+   HEAP32[$3 + 84 >> 2] = 0;
+   std____2__vector_nftPoint_2c_20std____2__allocator_nftPoint__20___push_back_28nftPoint___29($2, $3 + 80 | 0);
+   $4 = Math_imul($0, 20);
+   $7 = HEAP32[$4 + HEAP32[HEAP32[$1 + 92 >> 2] >> 2] >> 2];
+   wasm2js_i32$0 = std____2__vector_nftPoint_2c_20std____2__allocator_nftPoint__20___operator_5b_5d_28unsigned_20long_29($2, $0), 
+   wasm2js_i32$1 = $7, HEAP32[wasm2js_i32$0 >> 2] = wasm2js_i32$1;
+   $4 = HEAP32[(HEAP32[HEAP32[$1 + 92 >> 2] >> 2] + $4 | 0) + 4 >> 2];
+   wasm2js_i32$0 = std____2__vector_nftPoint_2c_20std____2__allocator_nftPoint__20___operator_5b_5d_28unsigned_20long_29($2, $0), 
+   wasm2js_i32$1 = $4, HEAP32[wasm2js_i32$0 + 4 >> 2] = wasm2js_i32$1;
+   wasm2js_i32$0 = $3, wasm2js_i32$1 = HEAP32[std____2__vector_nftPoint_2c_20std____2__allocator_nftPoint__20___operator_5b_5d_28unsigned_20long_29($2, $0) >> 2], 
+   HEAP32[wasm2js_i32$0 + 16 >> 2] = wasm2js_i32$1;
+   arLog(0, 1, 15812, $3 + 16 | 0);
+   wasm2js_i32$0 = $3, wasm2js_i32$1 = HEAP32[std____2__vector_nftPoint_2c_20std____2__allocator_nftPoint__20___operator_5b_5d_28unsigned_20long_29($2, $0) + 4 >> 2], 
+   HEAP32[wasm2js_i32$0 >> 2] = wasm2js_i32$1;
+   arLog(0, 1, 15826, $3);
+   $0 = $0 + 1 | 0;
+   continue;
+  }
+ }
+ __stack_pointer = $3 + 96 | 0;
+}
+
 function $28anonymous_20namespace_29__itanium_demangle__FoldExpr__printLeft_28_28anonymous_20namespace_29__itanium_demangle__OutputStream__29_20const($0, $1) {
  $0 = $0 | 0;
  $1 = $1 | 0;
@@ -27704,78 +27785,6 @@ function decompress_onepass($0, $1) {
  HEAP32[$6 + 20 >> 2] = $7;
  HEAP32[$6 + 24 >> 2] = $8;
  return 0;
-}
-
-function readNFTMarker($0, $1, $2) {
- $0 = $0 | 0;
- $1 = $1 | 0;
- $2 = $2 | 0;
- var $3 = 0, $4 = 0, $5 = 0, $6 = 0, wasm2js_i32$0 = 0, wasm2js_i32$1 = 0;
- $3 = __stack_pointer - 96 | 0;
- __stack_pointer = $3;
- HEAP32[$3 + 92 >> 2] = $1;
- $5 = nftMarker__nftMarker_28_29($0);
- wasm2js_i32$0 = $3, wasm2js_i32$1 = std____2__unordered_map_int_2c_20arFset_2c_20std____2__hash_int__2c_20std____2__equal_to_int__2c_20std____2__allocator_std____2__pair_int_20const_2c_20arFset__20__20___find_28int_20const__29(43800, $3 + 92 | 0), 
- HEAP32[wasm2js_i32$0 + 80 >> 2] = wasm2js_i32$1;
- wasm2js_i32$0 = $3, wasm2js_i32$1 = std____2__unordered_map_int_2c_20arFset_2c_20std____2__hash_int__2c_20std____2__equal_to_int__2c_20std____2__allocator_std____2__pair_int_20const_2c_20arFset__20__20___end_28_29(43800), 
- HEAP32[wasm2js_i32$0 + 88 >> 2] = wasm2js_i32$1;
- label$1: {
-  if (std____2__operator___28std____2____hash_map_iterator_std____2____hash_iterator_std____2____hash_node_std____2____hash_value_type_int_2c_20arFset__2c_20void_____20__20const__2c_20std____2____hash_map_iterator_std____2____hash_iterator_std____2____hash_node_std____2____hash_value_type_int_2c_20arFset__2c_20void_____20__20const__29($3 + 80 | 0, $3 + 88 | 0)) {
-   break label$1;
-  }
-  $4 = std____2__unordered_map_int_2c_20arFset_2c_20std____2__hash_int__2c_20std____2__equal_to_int__2c_20std____2__allocator_std____2__pair_int_20const_2c_20arFset__20__20___operator_5b_5d_28int_20const__29(43800, $3 + 92 | 0);
-  loadNFTMarker($4, HEAP32[$4 + 96 >> 2], std____2__basic_string_char_2c_20std____2__char_traits_char__2c_20std____2__allocator_char__20___c_str_28_29_20const($2));
-  HEAP32[$3 + 64 >> 2] = HEAP32[$4 + 16 >> 2];
-  arLog(0, 1, 15776, $3 - -64 | 0);
-  HEAP32[$4 + 96 >> 2] = HEAP32[$4 + 96 >> 2] + 1;
-  $0 = HEAP32[$4 >> 2];
-  $1 = HEAP32[$4 + 16 >> 2];
-  $2 = HEAP32[$4 + 24 >> 2];
-  HEAP32[$3 + 60 >> 2] = HEAP32[$4 + 92 >> 2];
-  HEAP32[$3 + 56 >> 2] = $2;
-  HEAP32[$3 + 52 >> 2] = $1;
-  HEAP32[$3 + 48 >> 2] = $0;
-  emscripten_asm_const_int(43164, 15807, $3 + 48 | 0) | 0;
-  $1 = $5 + 28 | 0;
-  $0 = 0;
-  while (1) {
-   if (HEAP32[$4 + 88 >> 2] <= ($0 | 0)) {
-    $0 = HEAP32[HEAP32[$4 + 92 >> 2] >> 2];
-    $1 = HEAP32[$0 + 204 >> 2];
-    HEAP32[$3 + 32 >> 2] = HEAP32[$0 + 200 >> 2];
-    HEAP32[$3 + 36 >> 2] = $1;
-    emscripten_asm_const_int(43383, 15840, $3 + 32 | 0) | 0;
-    HEAP32[$5 >> 2] = HEAP32[$4 + 72 >> 2];
-    HEAP32[$5 + 4 >> 2] = HEAP32[$4 + 76 >> 2];
-    HEAP32[$5 + 8 >> 2] = HEAP32[$4 + 80 >> 2];
-    HEAP32[$5 + 12 >> 2] = HEAP32[$4 + 84 >> 2];
-    HEAP32[$5 + 16 >> 2] = HEAP32[$4 + 88 >> 2];
-    HEAP32[$5 + 20 >> 2] = HEAP32[$4 + 24 >> 2];
-    HEAP32[$5 + 24 >> 2] = HEAP32[$4 + 92 >> 2];
-    HEAP32[$5 + 40 >> 2] = HEAP32[$4 + 16 >> 2];
-    break label$1;
-   }
-   HEAP32[$3 + 80 >> 2] = 0;
-   HEAP32[$3 + 84 >> 2] = 0;
-   std____2__vector_nftPoint_2c_20std____2__allocator_nftPoint__20___push_back_28nftPoint___29($1, $3 + 80 | 0);
-   $2 = Math_imul($0, 20);
-   $6 = HEAP32[$2 + HEAP32[HEAP32[$4 + 92 >> 2] >> 2] >> 2];
-   wasm2js_i32$0 = std____2__vector_nftPoint_2c_20std____2__allocator_nftPoint__20___operator_5b_5d_28unsigned_20long_29($1, $0), 
-   wasm2js_i32$1 = $6, HEAP32[wasm2js_i32$0 >> 2] = wasm2js_i32$1;
-   $2 = HEAP32[(HEAP32[HEAP32[$4 + 92 >> 2] >> 2] + $2 | 0) + 4 >> 2];
-   wasm2js_i32$0 = std____2__vector_nftPoint_2c_20std____2__allocator_nftPoint__20___operator_5b_5d_28unsigned_20long_29($1, $0), 
-   wasm2js_i32$1 = $2, HEAP32[wasm2js_i32$0 + 4 >> 2] = wasm2js_i32$1;
-   wasm2js_i32$0 = $3, wasm2js_i32$1 = HEAP32[std____2__vector_nftPoint_2c_20std____2__allocator_nftPoint__20___operator_5b_5d_28unsigned_20long_29($1, $0) >> 2], 
-   HEAP32[wasm2js_i32$0 + 16 >> 2] = wasm2js_i32$1;
-   arLog(0, 1, 15812, $3 + 16 | 0);
-   wasm2js_i32$0 = $3, wasm2js_i32$1 = HEAP32[std____2__vector_nftPoint_2c_20std____2__allocator_nftPoint__20___operator_5b_5d_28unsigned_20long_29($1, $0) + 4 >> 2], 
-   HEAP32[wasm2js_i32$0 >> 2] = wasm2js_i32$1;
-   arLog(0, 1, 15826, $3);
-   $0 = $0 + 1 | 0;
-   continue;
-  }
- }
- __stack_pointer = $3 + 96 | 0;
 }
 
 function decode_mcu_AC_first($0, $1) {
