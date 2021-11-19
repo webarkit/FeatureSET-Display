@@ -33,16 +33,6 @@ struct nftMarker {
   int pointer;
 };
 
-struct nftMarker {
-  int widthNFT;
-	int heightNFT;
-	int dpiNFT;
-  int numFsets;
-  int numFpoints;
-  int imgBWsize;
-  int pointer;
-};
-
 struct arFset {
   int id = 0;
   int width = 0;
