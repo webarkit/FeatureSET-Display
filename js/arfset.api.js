@@ -55,7 +55,7 @@ ARfset.prototype.display = function () {
           self.frameFeaturePoints,
           self.numFpoints * 2
         )
-        console.log(pointerFeaturePoints);
+        //console.log(pointerFeaturePoints);
           var id = new ImageData(
             new Uint8ClampedArray(self.canvas.width * self.canvas.height * 4),
             self.canvas.width,
@@ -83,7 +83,7 @@ ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
     if (markerURL) {
       return arfset.readNFTMarker(this.id, markerURL, function (nftMarker) {
           console.log(nftMarker);
-          console.log(nftMarker.nftPoints);
+          //console.log(nftMarker.nftPoints);
           var params = arfset.frameMalloc;
           self.frameIbwpointer = params.frameIbwpointer;
           self.frameimgBWsize = params.frameimgBWsize;

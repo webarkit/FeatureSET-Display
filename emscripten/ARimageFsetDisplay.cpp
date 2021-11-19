@@ -153,13 +153,13 @@ nftMarker readNFTMarker(int id, std::string datasetPathname) {
       },
       arc->id, arc->imgBW, arc->imgBWsize, arc->F_points_NFT);
 
-  for (int i = 0; i < arc->num_F_points_NFT; i++) {
+  /*for (int i = 0; i < arc->num_F_points_NFT; i++) {
     nft.nftPoints.push_back(nftPoint());
     nft.nftPoints[i].x = arc->F_points_NFT->coord[i].x;
     nft.nftPoints[i].y = arc->F_points_NFT->coord[i].y;
     ARLOGi("points x: %d\n", nft.nftPoints[i].x);
     ARLOGi("points y: %d\n", nft.nftPoints[i].y);
-  }
+  }*/
 
   for (int i = 0; i < arc->num_F_points_NFT; i++) {
     writeFP(arc->F_points_NFT->coord[i].x, arc->F_points_NFT->coord[i].y);
