@@ -20,23 +20,23 @@
     "url": "https://github.com/kalwalt/FeatureSET-Display/issues"
   },
   "dependencies": {
-    "glob": "^7.1.4",
-    "json2csv": "^4.1.5"
+    "glob": "^7.2.0",
+    "json2csv": "^5.0.6"
   },
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-cli": "^1.2.0",
-    "grunt-jsdoc": "^1.1.0",
-    "http-server": "^0.10.0",
+    "grunt": "^1.4.1",
+    "grunt-cli": "^1.4.3",
+    "grunt-jsdoc": "^2.4.1",
     "ink-docstrap": "^1.1.4",
-    "jsdoc": "^3.4.0",
-    "opener": "^1.4.3",
-    "qunit": "^2.4.1",
-    "watch": "^0.18.0"
+    "jsdoc": "^3.6.7",
+    "opener": "^1.5.2",
+    "watch": "^1.0.2"
   },
   "scripts": {
     "build": "node tools/makem.js; echo Built at `date`",
     "build-no-libar": "node tools/makem.js --no-libar; echo Built at `date`",
+    "create-doc": "grunt jsdoc",
+    "test": "npx http-server -c -1",
     "watch": "./node_modules/.bin/watch 'npm run build' ./js/"
   },
   "license": "LGPL-3.0"
