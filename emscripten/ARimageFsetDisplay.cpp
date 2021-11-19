@@ -59,6 +59,8 @@ static int gARFsetID = 0;
 
 extern "C" {
 
+extern void writeFP(int x, int y);
+
 int loadNFTMarker(arFset *arc, int surfaceSetCount,
                   const char *datasetPathname) {
   int i, pageNo, numIset, width, height, dpi;
@@ -149,25 +151,7 @@ nftMarker readNFTMarker(int id, std::string datasetPathname) {
   }
 
   for (int i = 0; i < arc->num_F_points_NFT; i++) {
-    EM_ASM_(
-        {
-          var x = $0;
-          var y = $1;
-          document.addEventListener(
-              'imageEv', function() {
-                const canvas = document.getElementById('iSet');
-                const context = canvas.getContext('2d');
-                const centerX = x;
-                const centerY = y;
-                const radius = 10;
-                context.beginPath();
-                context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-                context.lineWidth = 2;
-                context.strokeStyle = '#34FF19';
-                context.stroke();
-              });
-        },
-        arc->F_points_NFT->coord[i].x, arc->F_points_NFT->coord[i].y);
+    writeFP(arc->F_points_NFT->coord[i].x, arc->F_points_NFT->coord[i].y);
   }
 
   nft.widthNFT = arc->width_NFT;
