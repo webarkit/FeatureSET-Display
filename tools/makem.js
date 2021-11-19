@@ -134,6 +134,7 @@ FLAGS += ' -s USE_LIBJPEG';
 FLAGS += ' --memory-init-file 0 '; // for memless file
 FLAGS += ' -s "EXTRA_EXPORTED_RUNTIME_METHODS=[\'FS\']"';
 FLAGS += ' -s ALLOW_MEMORY_GROWTH=1';
+FLAGS += ' --js-library js/jslibrary.js '
 
 var PRE_FLAGS = ' --pre-js ' + path.resolve(__dirname, '../js/arfset.api.js') +' ';
 

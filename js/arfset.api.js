@@ -16,6 +16,8 @@ var ARfset = function(width, height){
   this.dpi = 0;
   this.frameIbwpointer = null;
   this.frameimgBWsize = null;
+  this.frameFeaturePoints = null;
+  this.numFpoints = null;
   this.canvas = null;
   this.ctx = null;
   this._init(width, height);
@@ -40,12 +42,20 @@ ARfset.prototype.display = function () {
         self.numIset = ev.detail.numIset;
         self.imageSetWidth = ev.detail.widthNFT;
         self.imageSetHeight = ev.detail.heightNFT;
+        self.frameFeaturePoints = ev.detail.pointerFeaturePoints;
+        self.numFpoints = ev.detail.numFpoints;
         self.dpi = ev.detail.dpi;
         var debugBuffer = new Uint8ClampedArray(
             Module.HEAPU8.buffer,
             self.frameIbwpointer,
             self.frameimgBWsize
           );
+        var pointerFeaturePoints = new Uint16Array(
+          Module.HEAPU16.buffer,
+          self.frameFeaturePoints,
+          self.numFpoints * 2
+        )
+        //console.log(pointerFeaturePoints);
           var id = new ImageData(
             new Uint8ClampedArray(self.canvas.width * self.canvas.height * 4),
             self.canvas.width,
@@ -60,6 +70,9 @@ ARfset.prototype.display = function () {
           }
     
           self.ctx.putImageData(id, 0, 0);
+
+          var imageEv = new Event('imageEv');
+          document.dispatchEvent(imageEv);
     
           Module._free(debugBuffer);
         })
@@ -70,6 +83,7 @@ ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
     if (markerURL) {
       return arfset.readNFTMarker(this.id, markerURL, function (nftMarker) {
           console.log(nftMarker);
+          //console.log(nftMarker.nftPoints);
           var params = arfset.frameMalloc;
           self.frameIbwpointer = params.frameIbwpointer;
           self.frameimgBWsize = params.frameimgBWsize;
@@ -78,10 +92,14 @@ ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
               numIset: nftMarker.numIset,
               widthNFT: nftMarker.width,
               heightNFT: nftMarker.height,
-              dpi: nftMarker.dpi
+              dpi: nftMarker.dpi,
+              numFpoints: nftMarker.numFpoints,
+              pointerFeaturePoints: nftMarker.nftFeaturePoints,
+              nftPoints: nftMarker.nftPoints
             }
           });
           document.dispatchEvent(nftEvent);
+          onSuccess(nftMarker);
       }, onError);
     } else {
       if (onError) {
@@ -166,6 +184,7 @@ var FUNCTIONS = [
   'display',
   'getImageSet'
 ];
+console.log(Module);
 
 function runWhenLoaded() {
     FUNCTIONS.forEach(function (n) {
