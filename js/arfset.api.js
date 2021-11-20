@@ -21,6 +21,8 @@ var ARfset = function(){
   this.canvas = null;
   this.ctx = null;
   this._init();
+  this.version = '0.1.1';
+  console.log('FeatureSETDisplay version: ', this.version);
 };
 
 ARfset.prototype.createCanvas = function () {
