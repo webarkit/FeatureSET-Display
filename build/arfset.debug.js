@@ -26,7 +26,7 @@ if (typeof window !== 'undefined') {
     scope = global;
 };
 
-var ARfset = function(width, height){
+var ARfset = function(){
   this.id = 0;
   this.nftMarkerCount = 0;
   this.numIset = 0;
@@ -39,7 +39,7 @@ var ARfset = function(width, height){
   this.numFpoints = null;
   this.canvas = null;
   this.ctx = null;
-  this._init(width, height);
+  this._init();
 };
 
 ARfset.prototype.createCanvas = function () {
@@ -101,7 +101,7 @@ ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
     var self = this;
     if (markerURL) {
       return arfset.readNFTMarker(this.id, markerURL, function (nftMarker) {
-          console.log(nftMarker);
+          //console.log(nftMarker);
           //console.log(nftMarker.nftPoints);
           var params = arfset.frameMalloc;
           self.frameIbwpointer = params.frameIbwpointer;
@@ -135,7 +135,11 @@ ARfset.prototype.getImageSet = function(){
   return this.imageSet;
 }
 
-ARfset.prototype._init = function(width, height){
+ARfset.prototype._init = function(){
+  // we need to start with a memory dimension.
+  // Memory can be enlarged thanks to MEMORY_ALLOW_GROWTH option.
+  var width = 893;
+  var height = 1117;
   this.id = arfset.setup(width, height);
 }
 
@@ -200,10 +204,7 @@ var arfset = {
 
 var FUNCTIONS = [
   'setup',
-  'display',
-  'getImageSet'
 ];
-console.log(Module);
 
 function runWhenLoaded() {
     FUNCTIONS.forEach(function (n) {
