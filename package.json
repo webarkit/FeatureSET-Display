@@ -20,12 +20,22 @@
     "url": "https://github.com/kalwalt/FeatureSET-Display/issues"
   },
   "dependencies": {
+    "@babel/runtime": "^7.16.3",
+    "axios": "^0.24.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.16.4",
+    "@babel/preset-env": "^7.16.4",
+    "babel-loader": "^8.2.3",
+    "webpack": "^5.64.2",
+    "webpack-cli": "^4.9.1"
   },
   "scripts": {
     "build": "node tools/makem.js; echo Built at `date`",
     "build-no-libar": "node tools/makem.js --no-libar; echo Built at `date`",
+    "dev-es6": "webpack --mode development --progress --watch",
+    "build-es6": "webpack --mode production",
     "test": "npx http-server -c -1",
     "watch": "./node_modules/.bin/watch 'npm run build' ./js/"
   },
