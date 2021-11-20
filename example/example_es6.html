@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>A simple example for displaying a Feature Set file</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1>FeatureSET-Display</h1>
+    <p>Displaying .iset .fset .fset3 files</p>
+    <p>Feature points: light green circles</p>
+    <p>FeatureSet3 points: tiny red circles</p>
+  </div>
+  <script type="text/javascript" src="../dist/ARFset.js"></script>
+ 
+  <script>
+   var ar = new ARFset.ARFset();
+   console.log(ar);
+   ar.initialize()
+   .then((e) => {
+       console.log(e);
+       ar.loadNFTMarker('data/pinball', (nft) => { 
+    console.log(nft);
+  });
+  document.addEventListener('nftMarker', (ev) => {
+    
+   })
+   ar.display();
+   })
+  </script>
+</body>
+</html>
