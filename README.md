@@ -4,7 +4,7 @@ A little javascript lib for display .iset and .fset .fset3 files
 
 ## Introduction of the project
 
-For now it's a **W**ork **I**n **P**rogress but with this little library it will be possible to display NFT markers (.fset .iset and .fset3) files
+With this little library it is possible to display NFT markers (.fset .iset and .fset3) files, generated with [NFT-Marker-Creator](https://github.com/.Carnaux/NFT-Marker-Creator). For now it may show you the image set from .iset file and the feature points from .fset and .fset3 files. Very useful utility to understand the stength and key points of the NFT marker.
 
 ### List of working features
 - Display of the first the ImageSet.
