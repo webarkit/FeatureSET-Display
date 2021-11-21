@@ -1,8 +1,7 @@
 {
-  "name": "FeatureSET-Display",
-  "version": "0.1.1",
-  "main": "js/index",
-  "typings": "js/index",
+  "name": "@webarkit/featureset-display",
+  "version": "0.2.0",
+  "main": "dist/ARFset.js",
   "description": "FeatureSET Display based on ARToolKit, ported thanks to Emscripten",
   "keywords": [
     "ARToolKit",
@@ -11,13 +10,13 @@
     "NFT"
   ],
   "author": "Walter Perdan @kalwalt (https://github.com/kalwalt)",
-  "repository": "https://github.com/kalwalt/FeatureSET-Display.git",
-  "homepage": "https://github.com/kalwalt/FeatureSET-Display",
+  "repository": "https://github.com/webarkit/FeatureSET-Display.git",
+  "homepage": "https://github.com/webarkit/FeatureSET-Display",
   "contributors": [
     ""
   ],
   "bugs": {
-    "url": "https://github.com/kalwalt/FeatureSET-Display/issues"
+    "url": "https://github.com/webarkit/FeatureSET-Display/issues"
   },
   "dependencies": {
     "@babel/runtime": "^7.16.3",
@@ -36,7 +35,7 @@
     "build-no-libar": "node tools/makem.js --no-libar; echo Built at `date`",
     "dev-es6": "webpack --mode development --progress --watch",
     "build-es6": "webpack --mode production",
-    "test": "npx http-server -c -1",
+    "serve": "npx http-server -c -1",
     "watch": "./node_modules/.bin/watch 'npm run build' ./js/"
   },
   "license": "LGPL-3.0"
