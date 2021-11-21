@@ -56,7 +56,7 @@ var ARfset = function(){
   this.canvas = null;
   this.ctx = null;
   this._init();
-  this.version = '0.2.0';
+  this.version = '0.2.1';
   console.log('FeatureSETDisplay version: ', this.version);
 };
 

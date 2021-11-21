@@ -52,7 +52,7 @@ export default class ARFset {
         this.numFpoints = null;
         this.canvas = null;
         this.ctx = null;
-        this.version = '0.2.0';
+        this.version = '0.2.1';
         console.log('FeatureSETDisplay version: ', this.version);
     }
 
