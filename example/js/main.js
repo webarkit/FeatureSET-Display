@@ -1,3 +1,4 @@
+// copyright @kalwalt @webarkit see LICENSE.txt
 window.addEventListener('FeatureSETDisplay-loaded', function () {
   var arfset = new ARfset();
   arfset.loadNFTMarker('data/pinball', (nft) => { 
