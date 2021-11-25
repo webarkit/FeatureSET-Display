@@ -37,6 +37,24 @@
 import axios from 'axios'
 
 export default class Utils {
+  static async fetchRemoteDataBlob(urlOrData) {
+    let data;
+    if (urlOrData.indexOf("\n") !== -1) {
+      // assume text from a .patt file
+      data = Utils.string2Uint8Data(urlOrData);
+      console.log(data);
+      return data;
+
+    } else {
+      try {
+        const response = await axios.get(urlOrData, { responseType: 'arraybuffer' })
+        console.log(response);
+        return new Uint8Array(response.data)
+      } catch (error) {
+        throw error
+      }
+    }
+  }
   static async fetchRemoteData (url) {
     try {
       const response = await axios.get(url, { responseType: 'arraybuffer' })
