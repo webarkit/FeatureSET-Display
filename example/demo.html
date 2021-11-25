@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--  copyright @kalwalt @webarkit see LICENSE.txt -->
+
+<head>
+    <meta charset="utf-8">
+    <title>A simple example for displaying a Feature Set file</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>FeatureSET-Display</h1>
+        <p>Displaying .iset .fset .fset3 files</p>
+        <p>Feature points: light green circles</p>
+        <p>FeatureSet3 points: tiny red circles</p>
+    </div>
+    <input class="input is-hidden" type="file" id="imageLoader" name="imageLoader" multiple />
+    <button class="button is-primary is-outlined is-fullwidth" id="uploadBt"
+        onclick="document.getElementById('imageLoader').click();">Upload Image</button>
+    <script type="text/javascript" src="../dist/ARFset.js"></script>
+
+    <script>
+        var ar = new ARFset.ARFset();
+        var imageLoader = document.getElementById('imageLoader');
+        imageLoader.addEventListener('change', handleImage, false);
+        
+
+        function handleImage(e) {
+            nameWithExt = e.target.files[0].name;
+            if (e.target.files.length == 3) {
+                console.log("Image uploaded: " + nameWithExt);
+
+                name = nameWithExt.substr(0, nameWithExt.lastIndexOf('.'));
+
+                let ext = nameWithExt.substr(nameWithExt.lastIndexOf('.'));
+
+                if (ext == '.iset' || ext == '.fset' || ext == '.fset3') {
+                    console.log('featureSet detected!');
+                    fileReader(e)
+                }
+                else {
+                    console.log("Invalid image format!");
+                }
+            }
+        }
+
+        function loadFset(url) {
+            var ar = new ARFset.ARFset();
+            ar.initialize()
+                .then((e) => {
+                    console.log(e);
+                    ar.loadNFTMarkerBlob(url, (nft) => {
+                    });
+                    document.addEventListener('nftMarker', (ev) => {
+                    })
+                    ar.display();
+                })
+        }
+
+        function fileReader(ev) {
+            for (var i=0; i < 3; i++){
+                let reader = new FileReader();
+                var dataURLs= [];
+                reader.onload = function (event) {          
+                    var dataURL = event.target.result;
+                    console.log(dataURL);
+                    dataURLs.push(dataURL);
+                };
+                reader.readAsDataURL(ev.target.files[i]);
+                console.log(dataURLs);
+                loadFset(dataURLs)
+            }
+        }
+    </script>
+</body>
+
+</html>

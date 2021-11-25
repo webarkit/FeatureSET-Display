@@ -156,6 +156,31 @@ export default class ARFset {
         return nft
       };
 
+      async loadNFTMarkerBlob (urlOrData) {
+        let nft = await this.addNFTMarkerBlob(this.id, urlOrData)
+        .then((nftMarker) => {
+             console.log(nftMarker);
+             var params = arfset.frameMalloc;
+              this.frameIbwpointer = params.frameIbwpointer;
+              this.frameimgBWsize = params.frameimgBWsize;
+              var nftEvent = new CustomEvent('nftMarker', {
+                detail: {
+                  numIset: nftMarker.numIset,
+                  widthNFT: nftMarker.width,
+                  heightNFT: nftMarker.height,
+                  dpi: nftMarker.dpi,
+                  numFpoints: nftMarker.numFpoints,
+                  pointerFeaturePoints: nftMarker.nftFeaturePoints,
+                  nftPoints: nftMarker.nftPoints
+                }
+              });
+              document.dispatchEvent(nftEvent);
+              this.nftMarkerCount = nftMarker.id + 1;
+        })
+        
+        return nft
+      };
+
     async addNFTMarker (arId, url) {
         // url doesn't need to be a valid url. Extensions to make it valid will be added here
         const targetPrefix = '/markerNFT_' + this.markerNFTCount++
@@ -165,6 +190,29 @@ export default class ARFset {
           const fullUrl = url + '.' + ext
           const target = targetPrefix + '.' + ext
           const data = await Utils.fetchRemoteData(fullUrl)
+          this._storeDataFile(data, target)
+        }
+    
+        const promises = extensions.map(storeMarker, this)
+        await Promise.all(promises)
+    
+        // return the internal marker ID
+        return this.instance._readNFTMarker(arId, targetPrefix)
+      }
+
+      async addNFTMarkerBlob (arId, urlOrData) {
+        // url doesn't need to be a valid url. Extensions to make it valid will be added here
+        console.log(urlOrData);
+        const targetPrefix = '/markerNFT_' + this.markerNFTCount++
+        const extensions = ['fset', 'iset', 'fset3']
+    
+        const storeMarker = async function (ext, i) {
+          //const fullUrl = url + '.' + ext
+          console.log(i);
+          const fullUrl = urlOrData[i]
+          console.log(fullUrl);
+          const target = targetPrefix + '.' + ext
+          const data = await Utils.fetchRemoteDataBlob(fullUrl)
           this._storeDataFile(data, target)
         }
     
