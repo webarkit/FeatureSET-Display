@@ -41,7 +41,7 @@ export default class ARFset {
 
     constructor() {
         this.id = 0;
-        this.nftMarkerCount = 0;
+        this.markerNFTCount = 0;
         this.numIset = 0;
         this.imageSetWidth = 0;
         this.imageSetHeight = 0;
