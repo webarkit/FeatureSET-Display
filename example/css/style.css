@@ -1,0 +1,42 @@
+body {
+    background-color: #eee;
+    font-family: sans-serif;
+    height: 100%;
+    width: 100%;
+    color: #026168;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+}
+
+.bt {
+    color: white;
+    border-radius: 6px;
+    width: 10em;
+    margin-top: 0.5em;
+    cursor: pointer;
+    padding: 0.25em;
+    font-size: 2em;
+    outline: inherit;
+    background-color: #026168;
+}
+
+.bt[disabled] {
+    opacity: 0.5;
+    cursor: default;
+}
+
+canvas {
+    display: block;
+    padding: 0;
+    margin-top: 3em;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+}
