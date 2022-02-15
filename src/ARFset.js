@@ -204,7 +204,7 @@ export default class ARFset {
         // url doesn't need to be a valid url. Extensions to make it valid will be added here
         console.log(urlOrData);
         const targetPrefix = '/markerNFT_' + this.markerNFTCount++
-        const extensions = ['fset', 'iset', 'fset3']
+        const extensions = ['iset', 'fset3', 'fset']
     
         const storeMarker = async function (ext, i) {
           //const fullUrl = url + '.' + ext
