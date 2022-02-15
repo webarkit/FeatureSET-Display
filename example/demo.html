@@ -5,6 +5,7 @@
 <head>
     <meta charset="utf-8">
     <title>A simple example for displaying a Feature Set file</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -13,17 +14,16 @@
         <p>Displaying .iset .fset .fset3 files</p>
         <p>Feature points: light green circles</p>
         <p>FeatureSet3 points: tiny red circles</p>
+        <input type="file" id="imageLoader" name="imageLoader" style="display: none;" multiple />
+        <button class="bt" id="uploadBt" onclick="document.getElementById('imageLoader').click();">Upload Image</button>
     </div>
-    <input class="input is-hidden" type="file" id="imageLoader" name="imageLoader" multiple />
-    <button class="button is-primary is-outlined is-fullwidth" id="uploadBt"
-        onclick="document.getElementById('imageLoader').click();">Upload Image</button>
+
     <script type="text/javascript" src="../dist/ARFset.js"></script>
 
     <script>
         var ar = new ARFset.ARFset();
         var imageLoader = document.getElementById('imageLoader');
         imageLoader.addEventListener('change', handleImage, false);
-        
 
         function handleImage(e) {
             nameWithExt = e.target.files[0].name;
@@ -48,7 +48,6 @@
             var ar = new ARFset.ARFset();
             ar.initialize()
                 .then((e) => {
-                    console.log(e);
                     ar.loadNFTMarkerBlob(url, (nft) => {
                     });
                     document.addEventListener('nftMarker', (ev) => {
@@ -58,18 +57,14 @@
         }
 
         function fileReader(ev) {
-            var dataURLs= [];
-            for (var i=0; i < 3; i++){
+            var dataURLs = [];
+            for (var i = 0; i < 3; i++) {
                 let reader = new FileReader();
-                
-                reader.onload = function (event) {          
+                reader.onload = function (event) {
                     var dataURL = event.target.result;
-                    console.log(dataURL);
                     dataURLs.push(dataURL);
                 };
                 reader.readAsDataURL(ev.target.files[i]);
-                console.log(dataURLs);
-                
             }
             loadFset(dataURLs)
         }
