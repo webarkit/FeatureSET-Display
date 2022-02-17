@@ -134,7 +134,6 @@ export default class ARFset {
     async loadNFTMarker (urlOrData) {
         let nft = await this.addNFTMarker(this.id, urlOrData)
         .then((nftMarker) => {
-             console.log(nftMarker);
              var params = arfset.frameMalloc;
               this.frameIbwpointer = params.frameIbwpointer;
               this.frameimgBWsize = params.frameimgBWsize;
@@ -159,7 +158,6 @@ export default class ARFset {
       async loadNFTMarkerBlob (urlOrData) {
         let nft = await this.addNFTMarkerBlob(this.id, urlOrData)
         .then((nftMarker) => {
-             console.log(nftMarker);
              var params = arfset.frameMalloc;
               this.frameIbwpointer = params.frameIbwpointer;
               this.frameimgBWsize = params.frameimgBWsize;
@@ -202,15 +200,11 @@ export default class ARFset {
 
       async addNFTMarkerBlob (arId, urlOrData) {
         // url doesn't need to be a valid url. Extensions to make it valid will be added here
-        console.log(urlOrData);
         const targetPrefix = '/markerNFT_' + this.markerNFTCount++
         const extensions = ['iset', 'fset3', 'fset']
     
         const storeMarker = async function (ext, i) {
-          //const fullUrl = url + '.' + ext
-          console.log(i);
           const fullUrl = urlOrData[i]
-          console.log(fullUrl);
           const target = targetPrefix + '.' + ext
           const data = await Utils.fetchRemoteDataBlob(fullUrl)
           this._storeDataFile(data, target)
