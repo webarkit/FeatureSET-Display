@@ -41,7 +41,7 @@ export default class ARFset {
 
     constructor() {
         this.id = 0;
-        this.nftMarkerCount = 0;
+        this.markerNFTCount = 0;
         this.numIset = 0;
         this.imageSetWidth = 0;
         this.imageSetHeight = 0;
@@ -63,6 +63,7 @@ export default class ARFset {
         const scope = (typeof window !== 'undefined') ? window : global
         scope.arfset = this
         this._setup()
+        this._createCanvas();
         return this;
     }
 
@@ -79,16 +80,20 @@ export default class ARFset {
 
     _createCanvas() {
         if (typeof document !== "undefined") {
+            if (document.getElementById('iSet')) {
+              document.getElementById('iSet').remove()
+            }
             this.canvas = document.createElement("canvas");
             this.canvas.id = "iSet";
             this.ctx = this.canvas.getContext("2d");
+            document.body.appendChild(this.canvas);
             console.log('canvas created');
         };
     }
 
     display () {
-        this._createCanvas();
-        document.body.appendChild(this.canvas);
+       
+        
         var self = this;
         document.addEventListener('nftMarker', function(ev) {
             self.canvas.width = ev.detail.widthNFT;
@@ -134,7 +139,30 @@ export default class ARFset {
     async loadNFTMarker (urlOrData) {
         let nft = await this.addNFTMarker(this.id, urlOrData)
         .then((nftMarker) => {
-             console.log(nftMarker);
+             var params = arfset.frameMalloc;
+              this.frameIbwpointer = params.frameIbwpointer;
+              this.frameimgBWsize = params.frameimgBWsize;
+              var nftEvent = new CustomEvent('nftMarker', {
+                detail: {
+                  numIset: nftMarker.numIset,
+                  widthNFT: nftMarker.width,
+                  heightNFT: nftMarker.height,
+                  dpi: nftMarker.dpi,
+                  numFpoints: nftMarker.numFpoints,
+                  pointerFeaturePoints: nftMarker.nftFeaturePoints,
+                  nftPoints: nftMarker.nftPoints
+                }
+              });
+              document.dispatchEvent(nftEvent);
+              this.nftMarkerCount = nftMarker.id + 1;
+        })
+        
+        return nft
+      };
+
+      async loadNFTMarkerBlob (urlOrData) {
+        let nft = await this.addNFTMarkerBlob(this.id, urlOrData)
+        .then((nftMarker) => {
              var params = arfset.frameMalloc;
               this.frameIbwpointer = params.frameIbwpointer;
               this.frameimgBWsize = params.frameimgBWsize;
@@ -165,6 +193,25 @@ export default class ARFset {
           const fullUrl = url + '.' + ext
           const target = targetPrefix + '.' + ext
           const data = await Utils.fetchRemoteData(fullUrl)
+          this._storeDataFile(data, target)
+        }
+    
+        const promises = extensions.map(storeMarker, this)
+        await Promise.all(promises)
+    
+        // return the internal marker ID
+        return this.instance._readNFTMarker(arId, targetPrefix)
+      }
+
+      async addNFTMarkerBlob (arId, urlOrData) {
+        // url doesn't need to be a valid url. Extensions to make it valid will be added here
+        const targetPrefix = '/markerNFT_' + this.markerNFTCount++
+        const extensions = ['iset', 'fset3', 'fset']
+    
+        const storeMarker = async function (ext, i) {
+          const fullUrl = urlOrData[i]
+          const target = targetPrefix + '.' + ext
+          const data = await Utils.fetchRemoteDataBlob(fullUrl)
           this._storeDataFile(data, target)
         }
     
