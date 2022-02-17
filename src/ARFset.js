@@ -63,6 +63,7 @@ export default class ARFset {
         const scope = (typeof window !== 'undefined') ? window : global
         scope.arfset = this
         this._setup()
+        this._createCanvas();
         return this;
     }
 
@@ -79,16 +80,20 @@ export default class ARFset {
 
     _createCanvas() {
         if (typeof document !== "undefined") {
+            if (document.getElementById('iSet')) {
+              document.getElementById('iSet').remove()
+            }
             this.canvas = document.createElement("canvas");
             this.canvas.id = "iSet";
             this.ctx = this.canvas.getContext("2d");
+            document.body.appendChild(this.canvas);
             console.log('canvas created');
         };
     }
 
     display () {
-        this._createCanvas();
-        document.body.appendChild(this.canvas);
+       
+        
         var self = this;
         document.addEventListener('nftMarker', function(ev) {
             self.canvas.width = ev.detail.widthNFT;
