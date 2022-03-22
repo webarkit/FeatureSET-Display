@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" id="cv">
         <h1>FeatureSET-Display</h1>
         <p>Displaying .iset .fset .fset3 files</p>
         <p>Feature points: light green circles</p>
@@ -46,6 +46,9 @@
 
         function loadFset(url) {
             var ar = new ARFset.ARFset();
+            // with attachCanvas we decide the element to attach our canvas.
+            // Uncomment this line to attach the canvas to the html body tag of the page       
+            ar.attachCanvas('cv');
             ar.initialize()
                 .then((e) => {
                     ar.loadNFTMarkerBlob(url, (nft) => {
