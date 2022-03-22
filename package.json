@@ -1,6 +1,6 @@
 {
   "name": "@webarkit/featureset-display",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "main": "dist/ARFset.js",
   "description": "FeatureSET Display based on ARToolKit, ported thanks to Emscripten",
   "keywords": [
