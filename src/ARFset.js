@@ -51,6 +51,7 @@ export default class ARFset {
         this.frameFeaturePoints = null;
         this.numFpoints = null;
         this.canvas = null;
+        this.canvasParent = null;
         this.ctx = null;
         this.version = '0.2.1';
         console.log('FeatureSETDisplay version: ', this.version);
@@ -86,9 +87,17 @@ export default class ARFset {
             this.canvas = document.createElement("canvas");
             this.canvas.id = "iSet";
             this.ctx = this.canvas.getContext("2d");
-            document.body.appendChild(this.canvas);
+            if(this.canvasParent){
+              this.canvasParent.appendChild(this.canvas)
+            } else {
+              document.body.appendChild(this.canvas);
+            }
             console.log('canvas created');
         };
+    }
+
+    attachCanvas(id) {
+      this.canvasParent = document.getElementById(id);
     }
 
     display () {
