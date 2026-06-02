@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.17.8",
-    "axios": "^0.26.1"
+    "axios": "^0.32.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
