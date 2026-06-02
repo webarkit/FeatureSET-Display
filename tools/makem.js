@@ -1,7 +1,7 @@
 /*
  *  Simple script for running emcc on FeatureSet-Display.
  *  Original script from jsartoolkit5.
- * 
+ *
  *  makem.js
  *  FeatureSet-Display
  *
@@ -31,7 +31,7 @@
  *  are not obligated to do so. If you do not wish to do so, delete this exception
  *  statement from your version.
  *
- *  Copyright 2021 WebARKit.
+ *  Copyright 2021-2026 WebARKit.
  *
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *           : zz85 https://github.com/zz85
@@ -39,77 +39,127 @@
  *
  */
 
-var
-	exec = require('child_process').exec,
-	path = require('path'),
-	fs = require('fs'),
-	child;
+const execFile = require('child_process').execFile;
+const execSync = require('child_process').execSync;
+const exec = require('child_process').exec;
+const path = require('path');
+const fs = require('fs');
 
-var NO_LIBAR = false;
+const isWindows = process.platform === 'win32';
 
-var arguments = process.argv;
+let NO_LIBAR = false;
 
-for (var j = 2; j < arguments.length; j++) {
-	if (arguments[j] == '--no-libar') {
+const argv = process.argv;
+for (let j = 2; j < argv.length; j++) {
+	if (argv[j] === '--no-libar') {
 		NO_LIBAR = true;
-		console.log('Building jsartoolkit5 with --no-libar option, libar will be preserved.');
-	};
+		console.log('Building FeatureSet-Display with --no-libar option, libar will be preserved.');
+	}
 }
 
-var HAVE_NFT = 1;
+const HAVE_NFT = 1;
 
-var EMSCRIPTEN_ROOT = process.env.EMSCRIPTEN;
-var WEBARKITLIB_ROOT = process.env.WEBARKITLIB_ROOT || path.resolve(__dirname, "../emscripten/WebARKitLib");
+// Fall back to EMSDK if EMSCRIPTEN isn't set: emsdk_env.bat sets EMSDK but
+// not EMSCRIPTEN, while the original script expects EMSCRIPTEN.
+let EMSCRIPTEN_ROOT = process.env.EMSCRIPTEN;
+if (!EMSCRIPTEN_ROOT && process.env.EMSDK) {
+	const guess = path.join(process.env.EMSDK, 'upstream', 'emscripten');
+	if (fs.existsSync(path.join(guess, 'emcc.py'))) {
+		EMSCRIPTEN_ROOT = guess;
+	}
+}
+const WEBARKITLIB_ROOT = process.env.WEBARKITLIB_ROOT || path.resolve(__dirname, '../emscripten/WebARKitLib');
 
 if (!EMSCRIPTEN_ROOT) {
-	console.log("\nWarning: EMSCRIPTEN environment variable not found.")
-	console.log("If you get a \"command not found\" error,\ndo `source <path to emsdk>/emsdk_env.sh` and try again.");
+	console.log('\nWarning: EMSCRIPTEN environment variable not found.');
+	console.log('If you get a "command not found" error,\ndo `source <path to emsdk>/emsdk_env.sh` and try again.');
 }
 
-var EMCC = EMSCRIPTEN_ROOT ? path.resolve(EMSCRIPTEN_ROOT, 'emcc') : 'emcc';
-var EMPP = EMSCRIPTEN_ROOT ? path.resolve(EMSCRIPTEN_ROOT, 'em++') : 'em++';
-var OPTIMIZE_FLAGS = ' -Oz '; // -Oz for smallest size
-var MEM = (256 *1024 * 1024) ; // 64MB
+// Resolve how to invoke emcc. On Unix this is simple. On Windows, the
+// installed entry point is emcc.bat, but Node 18.20+/20.12+/22.x refuse to
+// spawn .bat files via execFile (CVE-2024-27980 mitigation, returns EINVAL).
+// shell:true would re-introduce cmd.exe's ~8k command-line limit. Instead,
+// locate the underlying emcc.py and call python directly, which avoids
+// both the .bat block and the cmd.exe limit.
+function resolveEmccPrefix() {
+	if (!isWindows) {
+		const emcc = EMSCRIPTEN_ROOT ? path.resolve(EMSCRIPTEN_ROOT, 'emcc') : 'emcc';
+		return { cmd: emcc, prefixArgs: [] };
+	}
+	let batDir;
+	if (EMSCRIPTEN_ROOT) {
+		batDir = EMSCRIPTEN_ROOT;
+	} else {
+		try {
+			const out = execSync('where emcc.bat', { encoding: 'utf8' });
+			batDir = path.dirname(out.split(/\r?\n/)[0].trim());
+		} catch (e) {
+			console.error('Could not locate emcc.bat. Set EMSCRIPTEN env var or add emsdk to PATH.');
+			process.exit(1);
+		}
+	}
+	const pyScript = path.join(batDir, 'emcc.py');
+	if (!fs.existsSync(pyScript)) {
+		console.error('Cannot find emcc.py next to emcc.bat at ' + batDir);
+		process.exit(1);
+	}
+	const python = process.env.EMSDK_PYTHON || 'python';
+	return { cmd: python, prefixArgs: [pyScript] };
+}
 
+const EMCC_INVOKE = resolveEmccPrefix();
+function emccCmd(args) {
+	return [EMCC_INVOKE.cmd].concat(EMCC_INVOKE.prefixArgs).concat(args);
+}
 
-var SOURCE_PATH = path.resolve(__dirname, '../emscripten/') + '/';
-var OUTPUT_PATH = path.resolve(__dirname, '../build/') + '/';
+const OPTIMIZE_FLAGS = '-Oz'; // -Oz for smallest size
+const MEM = 256 * 1024 * 1024; // 256MB
 
-var BUILD_DEBUG_FILE = 'arfset.debug.js';
-var BUILD_WASM_FILE = 'arfset_wasm.js';
-var BUILD_WASM_ES6_FILE = 'arfset_ES6_wasm.js';
-var BUILD_MIN_FILE = 'arfset.min.js';
+const SOURCE_PATH = path.resolve(__dirname, '../emscripten');
+const OUTPUT_PATH = path.resolve(__dirname, '../build');
 
-var MAIN_SOURCES = [
-	'ARimageFsetDisplay.cpp',
-];
+const BUILD_DEBUG_FILE = 'arfset.debug.js';
+const BUILD_WASM_FILE = 'arfset_wasm.js';
+const BUILD_WASM_ES6_FILE = 'arfset_ES6_wasm.js';
+const BUILD_MIN_FILE = 'arfset.min.js';
 
 if (!fs.existsSync(path.resolve(WEBARKITLIB_ROOT, 'include/AR/config.h'))) {
-	console.log("Renaming and moving config.h.in to config.h");
+	console.log('Renaming and moving config.h.in to config.h');
 	fs.copyFileSync(
 		path.resolve(WEBARKITLIB_ROOT, 'include/AR/config.h.in'),
 		path.resolve(WEBARKITLIB_ROOT, 'include/AR/config.h')
 	);
-	console.log("Done!");
+	console.log('Done!');
 }
 
-MAIN_SOURCES = MAIN_SOURCES.map(function(src) {
+const MAIN_SOURCES = ['ARimageFsetDisplay.cpp'].map(function (src) {
 	return path.resolve(SOURCE_PATH, src);
-}).join(' ');
+});
 
-let srcTest = path.resolve(__dirname, WEBARKITLIB_ROOT + '/lib/SRC/');
+// Expand "dir/*.ext" patterns in Node, since cmd.exe on Windows doesn't
+// expand globs the way bash/zsh do.
+function expandGlob(pattern) {
+	if (pattern.indexOf('*') === -1) return [pattern];
+	const dir = path.dirname(pattern);
+	const ext = path.extname(pattern);
+	return fs.readdirSync(dir)
+		.filter(function (f) { return path.extname(f) === ext; })
+		.map(function (f) { return path.join(dir, f); });
+}
 
-var ar_sources = [
+let ar_sources = [
 	'AR/arLabelingSub/*.c',
 	'AR/*.c',
 	'ARICP/*.c',
 	'ARUtil/log.c',
 	'ARUtil/file_utils.c',
-].map(function(src) {
-	return path.resolve(__dirname, WEBARKITLIB_ROOT + '/lib/SRC/', src);
-});
+].map(function (src) {
+	return path.resolve(WEBARKITLIB_ROOT, 'lib/SRC', src);
+}).reduce(function (acc, src) {
+	return acc.concat(expandGlob(src));
+}, []);
 
-var ar2_sources = [
+const ar2_sources = [
 	'handle.c',
 	'imageSet.c',
 	'jpeg.c',
@@ -126,11 +176,11 @@ var ar2_sources = [
 	'searchPoint.c',
 	'coord.c',
 	'util.c',
-].map(function(src) {
-	return path.resolve(__dirname, WEBARKITLIB_ROOT + '/lib/SRC/AR2/', src);
+].map(function (src) {
+	return path.resolve(WEBARKITLIB_ROOT, 'lib/SRC/AR2', src);
 });
 
-var kpm_sources = [
+const kpm_sources = [
 	'KPM/kpmHandle.cpp',
 	'KPM/kpmRefDataSet.cpp',
 	'KPM/kpmMatching.cpp',
@@ -140,7 +190,7 @@ var kpm_sources = [
 	'KPM/FreakMatcher/detectors/DoG_scale_invariant_detector.cpp',
 	'KPM/FreakMatcher/detectors/gaussian_scale_space_pyramid.cpp',
 	'KPM/FreakMatcher/detectors/gradients.cpp',
-	'KPM/FreakMatcher/detectors/harris.cpp',
+	//'KPM/FreakMatcher/detectors/harris.cpp',
 	'KPM/FreakMatcher/detectors/orientation_assignment.cpp',
 	'KPM/FreakMatcher/detectors/pyramid.cpp',
 	'KPM/FreakMatcher/facade/visual_database_facade.cpp',
@@ -150,106 +200,124 @@ var kpm_sources = [
 	'KPM/FreakMatcher/framework/image.cpp',
 	'KPM/FreakMatcher/framework/logger.cpp',
 	'KPM/FreakMatcher/framework/timers.cpp',
-].map(function(src) {
-	return path.resolve(__dirname, WEBARKITLIB_ROOT + '/lib/SRC/', src);
+].map(function (src) {
+	return path.resolve(WEBARKITLIB_ROOT, 'lib/SRC', src);
 });
 
 if (HAVE_NFT) {
-	ar_sources = ar_sources
-	.concat(ar2_sources)
-	.concat(kpm_sources);
+	ar_sources = ar_sources.concat(ar2_sources).concat(kpm_sources);
 }
 
-var DEFINES = ' ';
-if (HAVE_NFT) DEFINES += ' -D HAVE_NFT ';
+let DEFINES = [];
+if (HAVE_NFT) DEFINES.push('-D', 'HAVE_NFT');
 
-var FLAGS = '' + OPTIMIZE_FLAGS;
-FLAGS += ' -Wno-warn-absolute-paths ';
-FLAGS += ' -s TOTAL_MEMORY=' + MEM + ' ';
-FLAGS += ' -s USE_ZLIB=1';
-FLAGS += ' -s USE_LIBJPEG';
-FLAGS += ' --memory-init-file 0 '; // for memless file
-FLAGS += ' -s "EXPORTED_RUNTIME_METHODS=[\'FS\']"';
-FLAGS += ' -s ALLOW_MEMORY_GROWTH=1';
+const FLAGS = [
+	OPTIMIZE_FLAGS,
+	'-Wno-warn-absolute-paths',
+	'-s', 'TOTAL_MEMORY=' + MEM,
+	'-s', 'USE_ZLIB=1',
+	'-s', 'USE_LIBJPEG',
+	'-s', 'EXPORTED_RUNTIME_METHODS=["FS"]',
+	'-s', 'ALLOW_MEMORY_GROWTH=1',
+	'--bind',
+];
 
-var PRE_FLAGS = ' --pre-js ' + path.resolve(__dirname, '../js/arfset.api.js') +' ';
+const PRE_FLAGS = ['--pre-js', path.resolve(__dirname, '../js/arfset.api.js')];
+const WASM_FLAGS = ['-s', 'SINGLE_FILE=1'];
+const ES6_FLAGS = [
+	'-s', 'EXPORT_ES6=1',
+	//'-s', 'USE_ES6_IMPORT_META=0',
+	'-s', 'ENVIRONMENT=web',
+	'-s', 'EXPORT_NAME=arFset',
+	'-s', 'MODULARIZE=1',
+];
 
-var WASM_FLAGS = ' -s SINGLE_FILE=1 '
-var ES6_FLAGS = ' -s EXPORT_ES6=1 -s USE_ES6_IMPORT_META=0 -s EXPORT_NAME="arFset" -s MODULARIZE=1 ';
+const DEBUG_FLAGS = [
+	'-g',
+	'-s', 'ASSERTIONS=1',
+	'--profiling',
+	'-s', 'ALLOW_MEMORY_GROWTH=1',
+	'-s', 'DEMANGLE_SUPPORT=1',
+];
 
-FLAGS += ' --bind ';
-
-/* DEBUG FLAGS */
-var DEBUG_FLAGS = ' -g ';
-// DEBUG_FLAGS += ' -s ASSERTIONS=2 '
-DEBUG_FLAGS += ' -s ASSERTIONS=1 '
-DEBUG_FLAGS += ' --profiling '
-// DEBUG_FLAGS += ' -s EMTERPRETIFY_ADVISE=1 '
-DEBUG_FLAGS += ' -s ALLOW_MEMORY_GROWTH=1';
-DEBUG_FLAGS += '  -s DEMANGLE_SUPPORT=1 ';
-
-var INCLUDES = [
-	path.resolve(__dirname, WEBARKITLIB_ROOT + '/include'),
+const INCLUDES = [
+	path.resolve(WEBARKITLIB_ROOT, 'include'),
 	OUTPUT_PATH,
 	SOURCE_PATH,
-	path.resolve(__dirname, WEBARKITLIB_ROOT + '/lib/SRC/KPM/FreakMatcher'),
-].map(function(s) { return '-I' + s }).join(' ');
-
-function format(str) {
-	for (var f = 1; f < arguments.length; f++) {
-		str = str.replace(/{\w*}/, arguments[f]);
-	}
-	return str;
-}
+	path.resolve(WEBARKITLIB_ROOT, 'lib/SRC/KPM/FreakMatcher'),
+].map(function (s) { return '-I' + s; });
 
 function clean_builds() {
 	try {
-		var stats = fs.statSync(OUTPUT_PATH);
+		fs.statSync(OUTPUT_PATH);
 	} catch (e) {
 		fs.mkdirSync(OUTPUT_PATH);
 	}
-
 	try {
-		var files = fs.readdirSync(OUTPUT_PATH);
-		var filesLength = files.length;
-		if (filesLength > 0)
-	    if (NO_LIBAR == true){
-		      filesLength -= 1;
-	    }
-			for (var i = 0; i < filesLength; i++) {
-			var filePath = OUTPUT_PATH + '/' + files[i];
-			if (fs.statSync(filePath).isFile())
-				fs.unlinkSync(filePath);
+		const files = fs.readdirSync(OUTPUT_PATH);
+		let filesLength = files.length;
+		if (filesLength > 0 && NO_LIBAR === true) filesLength -= 1;
+		for (let i = 0; i < filesLength; i++) {
+			const filePath = path.join(OUTPUT_PATH, files[i]);
+			if (fs.statSync(filePath).isFile()) fs.unlinkSync(filePath);
 		}
+	} catch (e) {
+		return console.log(e);
 	}
-	catch(e) { return console.log(e); }
 }
 
-var compile_arlib = format(EMCC + ' ' + INCLUDES + ' '
-    + ar_sources.join(' ')
-    + FLAGS + ' ' + DEFINES + ' -r -o {OUTPUT_PATH}libar.bc ',
-    OUTPUT_PATH);
+const LIBAR_BC = path.resolve(OUTPUT_PATH, 'libar.o');
 
-var compile_combine = format(EMCC + ' ' + INCLUDES + ' '
-	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES + PRE_FLAGS
-	+ FLAGS + ' -s WASM=0' + ' '  + DEBUG_FLAGS + DEFINES + ' -o {OUTPUT_PATH}{BUILD_FILE} ',
-	OUTPUT_PATH, OUTPUT_PATH, BUILD_DEBUG_FILE);
+const compile_arlib = emccCmd(
+	INCLUDES
+		.concat(ar_sources)
+		.concat(FLAGS)
+		.concat(DEFINES)
+		.concat(['-r', '-o', LIBAR_BC])
+);
 
-var compile_combine_min = format(EMCC + ' '  + INCLUDES + ' '
-	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES + PRE_FLAGS
-	+ FLAGS + ' -s WASM=0' + ' ' + DEFINES  + ' -o {OUTPUT_PATH}{BUILD_FILE} ',
- 	OUTPUT_PATH, OUTPUT_PATH, BUILD_MIN_FILE);
+const compile_combine = emccCmd(
+	INCLUDES
+		.concat([LIBAR_BC])
+		.concat(MAIN_SOURCES)
+		.concat(PRE_FLAGS)
+		.concat(FLAGS)
+		.concat(['-s', 'WASM=0'])
+		.concat(DEBUG_FLAGS)
+		.concat(DEFINES)
+		.concat(['-o', path.resolve(OUTPUT_PATH, BUILD_DEBUG_FILE)])
+);
 
-var compile_wasm = format(EMCC + ' ' + INCLUDES + ' '
-	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES
-	+ FLAGS + DEFINES + ' -o {OUTPUT_PATH}{BUILD_FILE} ',
-	OUTPUT_PATH, OUTPUT_PATH, BUILD_WASM_FILE);
+const compile_combine_min = emccCmd(
+	INCLUDES
+		.concat([LIBAR_BC])
+		.concat(MAIN_SOURCES)
+		.concat(PRE_FLAGS)
+		.concat(FLAGS)
+		.concat(['-s', 'WASM=0'])
+		.concat(DEFINES)
+		.concat(['-o', path.resolve(OUTPUT_PATH, BUILD_MIN_FILE)])
+);
 
-var compile_wasm_es6 = format(EMCC + ' ' + INCLUDES + ' '
-	+ ' {OUTPUT_PATH}libar.bc ' + MAIN_SOURCES
-	+ FLAGS + WASM_FLAGS + DEFINES + ES6_FLAGS + ' -o {OUTPUT_PATH}{BUILD_FILE} ',
-	OUTPUT_PATH, OUTPUT_PATH, BUILD_WASM_ES6_FILE);
+const compile_wasm = emccCmd(
+	INCLUDES
+		.concat([LIBAR_BC])
+		.concat(MAIN_SOURCES)
+		.concat(FLAGS)
+		.concat(DEFINES)
+		.concat(['-o', path.resolve(OUTPUT_PATH, BUILD_WASM_FILE)])
+);
 
+const compile_wasm_es6 = emccCmd(
+	INCLUDES
+		.concat([LIBAR_BC])
+		.concat(MAIN_SOURCES)
+		.concat(FLAGS)
+		.concat(WASM_FLAGS)
+		.concat(DEFINES)
+		.concat(ES6_FLAGS)
+		.concat(['-o', path.resolve(OUTPUT_PATH, BUILD_WASM_ES6_FILE)])
+);
 
 /*
  * Run commands
@@ -260,33 +328,37 @@ function onExec(error, stdout, stderr) {
 	if (stderr) console.log('stderr: ' + stderr);
 	if (error !== null) {
 		console.log('exec error: ' + error.code);
-		process.exit(error.code);
+		process.exit(typeof error.code === 'number' ? error.code : 1);
 	} else {
 		runJob();
 	}
 }
+
+const jobs = [];
+
+function addJob(job) { jobs.push(job); }
 
 function runJob() {
 	if (!jobs.length) {
 		console.log('Jobs completed');
 		return;
 	}
-	var cmd = jobs.shift();
-
+	const cmd = jobs.shift();
 	if (typeof cmd === 'function') {
 		cmd();
 		runJob();
 		return;
 	}
-
-	console.log('\nRunning command: ' + cmd + '\n');
-	exec(cmd, onExec);
-}
-
-var jobs = [];
-
-function addJob(job) {
-	jobs.push(job);
+	if (Array.isArray(cmd)) {
+		console.log('\nRunning command (execFile): ' + cmd.join(' ') + '\n');
+		execFile(cmd[0], cmd.slice(1), { maxBuffer: 64 * 1024 * 1024 }, onExec);
+	} else if (typeof cmd === 'string') {
+		console.log('\nRunning command (exec): ' + cmd + '\n');
+		exec(cmd, onExec);
+	} else {
+		console.error('Invalid command type:', cmd);
+		process.exit(1);
+	}
 }
 
 addJob(clean_builds);
@@ -296,8 +368,8 @@ addJob(compile_wasm);
 addJob(compile_wasm_es6);
 addJob(compile_combine_min);
 
-if (NO_LIBAR == true){
-  jobs.splice(1,1);
+if (NO_LIBAR === true) {
+	jobs.splice(1, 1);
 }
 
 runJob();
