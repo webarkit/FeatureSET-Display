@@ -66,6 +66,7 @@ struct nftMarker {
   int imgBWsize;
   int nftFeaturePoints;
   std::vector<nftPoint> nftPoints;
+  std::vector<nftPoint> nftFsetPoints;
   int pointer;
 };
 
@@ -95,9 +96,6 @@ static int ARFSET_NOT_FOUND = -1;
 static int gARFsetID = 0;
 
 extern "C" {
-
-extern void writeFP(int x, int y);
-extern void writeFS(int x, int y);
 
 int loadNFTMarker(arFset *arc, int surfaceSetCount,
                   const char *datasetPathname) {
@@ -189,20 +187,20 @@ nftMarker readNFTMarker(int id, std::string datasetPathname) {
       },
       arc->id, arc->imgBW, arc->imgBWsize, arc->F_points_NFT);
 
-  /*for (int i = 0; i < arc->num_F_points_NFT; i++) {
-    nft.nftPoints.push_back(nftPoint());
-    nft.nftPoints[i].x = arc->F_points_NFT->coord[i].x;
-    nft.nftPoints[i].y = arc->F_points_NFT->coord[i].y;
-    ARLOGi("points x: %d\n", nft.nftPoints[i].x);
-    ARLOGi("points y: %d\n", nft.nftPoints[i].y);
-  }*/
-
+  nft.nftPoints.reserve(arc->num_F_points_NFT);
   for (int i = 0; i < arc->num_F_points_NFT; i++) {
-    writeFP(arc->F_points_NFT->coord[i].x, arc->F_points_NFT->coord[i].y);
+    nftPoint p;
+    p.x = arc->F_points_NFT->coord[i].x;
+    p.y = arc->F_points_NFT->coord[i].y;
+    nft.nftPoints.push_back(p);
   }
 
+  nft.nftFsetPoints.reserve(arc->refDataSet->num);
   for (int i = 0; i < arc->refDataSet->num; i++) {
-    writeFS(arc->refDataSet->refPoint[i].coord2D.x, arc->refDataSet->refPoint[i].coord2D.y);
+    nftPoint p;
+    p.x = arc->refDataSet->refPoint[i].coord2D.x;
+    p.y = arc->refDataSet->refPoint[i].coord2D.y;
+    nft.nftFsetPoints.push_back(p);
   }
 
   nft.widthNFT = arc->width_NFT;

@@ -79,7 +79,6 @@ ARfset.prototype.display = function () {
         self.numIset = ev.detail.numIset;
         self.imageSetWidth = ev.detail.widthNFT;
         self.imageSetHeight = ev.detail.heightNFT;
-        self.frameFeaturePoints = ev.detail.pointerFeaturePoints;
         self.numFpoints = ev.detail.numFpoints;
         self.dpi = ev.detail.dpi;
         var debugBuffer = new Uint8ClampedArray(
@@ -87,12 +86,6 @@ ARfset.prototype.display = function () {
             self.frameIbwpointer,
             self.frameimgBWsize
           );
-        var pointerFeaturePoints = new Uint16Array(
-          Module.HEAPU16.buffer,
-          self.frameFeaturePoints,
-          self.numFpoints * 2
-        )
-        //console.log(pointerFeaturePoints);
           var id = new ImageData(
             new Uint8ClampedArray(self.canvas.width * self.canvas.height * 4),
             self.canvas.width,
@@ -105,15 +98,30 @@ ARfset.prototype.display = function () {
             id.data[j + 2] = v;
             id.data[j + 3] = 255;
           }
-    
+
           self.ctx.putImageData(id, 0, 0);
+
+          drawPoints(self.ctx, ev.detail.nftPoints, 10, '#34FF19', 2);
+          drawPoints(self.ctx, ev.detail.nftFsetPoints, 4, '#FF0119', 1);
 
           var imageEv = new Event('imageEv');
           document.dispatchEvent(imageEv);
-    
-          Module._free(debugBuffer);
         })
 };
+
+function drawPoints(ctx, points, radius, strokeStyle, lineWidth) {
+    if (!points) return;
+    ctx.strokeStyle = strokeStyle;
+    ctx.lineWidth = lineWidth;
+    var size = points.size();
+    for (var i = 0; i < size; i++) {
+        var p = points.get(i);
+        ctx.beginPath();
+        ctx.arc(p[0], p[1], radius, 0, 2 * Math.PI, false);
+        ctx.stroke();
+    }
+    points.delete();
+}
 
 ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
     var self = this;
@@ -132,7 +140,8 @@ ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
               dpi: nftMarker.dpi,
               numFpoints: nftMarker.numFpoints,
               pointerFeaturePoints: nftMarker.nftFeaturePoints,
-              nftPoints: nftMarker.nftPoints
+              nftPoints: nftMarker.nftPoints,
+              nftFsetPoints: nftMarker.nftFsetPoints
             }
           });
           document.dispatchEvent(nftEvent);

@@ -101,8 +101,6 @@ export default class ARFset {
     }
 
     display () {
-       
-        
         var self = this;
         document.addEventListener('nftMarker', function(ev) {
             self.canvas.width = ev.detail.widthNFT;
@@ -110,7 +108,6 @@ export default class ARFset {
             self.numIset = ev.detail.numIset;
             self.imageSetWidth = ev.detail.widthNFT;
             self.imageSetHeight = ev.detail.heightNFT;
-            self.frameFeaturePoints = ev.detail.pointerFeaturePoints;
             self.numFpoints = ev.detail.numFpoints;
             self.dpi = ev.detail.dpi;
             var debugBuffer = new Uint8ClampedArray(
@@ -118,11 +115,6 @@ export default class ARFset {
                 self.frameIbwpointer,
                 self.frameimgBWsize
               );
-            var pointerFeaturePoints = new Uint16Array(
-              self.instance.HEAPU16.buffer,
-              self.frameFeaturePoints,
-              self.numFpoints * 2
-            )
               var id = new ImageData(
                 new Uint8ClampedArray(self.canvas.width * self.canvas.height * 4),
                 self.canvas.width,
@@ -135,14 +127,29 @@ export default class ARFset {
                 id.data[j + 2] = v;
                 id.data[j + 3] = 255;
               }
-        
+
               self.ctx.putImageData(id, 0, 0);
-    
+
+              self._drawPoints(ev.detail.nftPoints, 10, '#34FF19', 2);
+              self._drawPoints(ev.detail.nftFsetPoints, 4, '#FF0119', 1);
+
               var imageEv = new Event('imageEv');
               document.dispatchEvent(imageEv);
-        
-             self.instance._free(debugBuffer);
             })
+    };
+
+    _drawPoints(points, radius, strokeStyle, lineWidth) {
+      if (!points) return;
+      this.ctx.strokeStyle = strokeStyle;
+      this.ctx.lineWidth = lineWidth;
+      const size = points.size();
+      for (let i = 0; i < size; i++) {
+        const p = points.get(i);
+        this.ctx.beginPath();
+        this.ctx.arc(p[0], p[1], radius, 0, 2 * Math.PI, false);
+        this.ctx.stroke();
+      }
+      points.delete();
     };
 
     async loadNFTMarker (urlOrData) {
@@ -159,13 +166,14 @@ export default class ARFset {
                   dpi: nftMarker.dpi,
                   numFpoints: nftMarker.numFpoints,
                   pointerFeaturePoints: nftMarker.nftFeaturePoints,
-                  nftPoints: nftMarker.nftPoints
+                  nftPoints: nftMarker.nftPoints,
+                  nftFsetPoints: nftMarker.nftFsetPoints
                 }
               });
               document.dispatchEvent(nftEvent);
               this.nftMarkerCount = nftMarker.id + 1;
         })
-        
+
         return nft
       };
 
@@ -183,13 +191,14 @@ export default class ARFset {
                   dpi: nftMarker.dpi,
                   numFpoints: nftMarker.numFpoints,
                   pointerFeaturePoints: nftMarker.nftFeaturePoints,
-                  nftPoints: nftMarker.nftPoints
+                  nftPoints: nftMarker.nftPoints,
+                  nftFsetPoints: nftMarker.nftFsetPoints
                 }
               });
               document.dispatchEvent(nftEvent);
               this.nftMarkerCount = nftMarker.id + 1;
         })
-        
+
         return nft
       };
 
