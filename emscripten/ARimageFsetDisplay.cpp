@@ -76,18 +76,18 @@ struct arFset {
   int height = 0;
   ARUint8 *videoFrame = NULL;
   ARUint8 *imgBW = NULL;
-  int videoFrameSize;
-  int imgBWsize;
+  int videoFrameSize = 0;
+  int imgBWsize = 0;
   AR2ImageSetT *imageSet = NULL;
-  AR2SurfaceSetT *surfaceSet[PAGES_MAX];
-  KpmRefDataSet           *refDataSet;
-  int width_NFT;
-  int height_NFT;
-  int dpi_NFT;
-  int num_F_set_NFT;    // number of Feature sets
-  int num_F_points_NFT; // number of Feature points
-  AR2FeaturePointsT *F_points_NFT;
-  int surfaceSetCount = 0; // Running NFT marker id
+  AR2SurfaceSetT *surfaceSet[PAGES_MAX] = {};
+  KpmRefDataSet *refDataSet = NULL;
+  int width_NFT = 0;
+  int height_NFT = 0;
+  int dpi_NFT = 0;
+  int num_F_set_NFT = 0;    // number of Feature sets
+  int num_F_points_NFT = 0; // number of Feature points
+  AR2FeaturePointsT *F_points_NFT = NULL;
+  int surfaceSetCount = 0;  // Running NFT marker id
 };
 
 std::unordered_map<int, arFset> arFsets;
@@ -101,12 +101,18 @@ int loadNFTMarker(arFset *arc, int surfaceSetCount,
                   const char *datasetPathname) {
   int i, pageNo, numIset, width, height, dpi;
 
+  if (surfaceSetCount >= PAGES_MAX) {
+    ARLOGe("Cannot load more than %d NFT markers\n", PAGES_MAX);
+    return FALSE;
+  }
+
   // Load AR2 data.
   ARLOGi("Reading %s.fset\n", datasetPathname);
 
   if ((arc->surfaceSet[surfaceSetCount] =
            ar2ReadSurfaceSet(datasetPathname, "fset", NULL)) == NULL) {
     ARLOGe("Error reading data from %s.fset\n", datasetPathname);
+    return FALSE;
   }
 
   numIset = arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->num;
@@ -125,7 +131,7 @@ int loadNFTMarker(arFset *arc, int surfaceSetCount,
   arc->imgBW =
       arc->surfaceSet[surfaceSetCount]->surface[0].imageSet->scale[0]->imgBW;
 
-  ARLOGi("printing pointer imgBW: %d\n", arc->imgBW);
+  ARLOGi("printing pointer imgBW: %p\n", (void *)arc->imgBW);
 
   ARLOGi("NFT number of ImageSet: %i\n", numIset);
   ARLOGi("NFT marker width: %i\n", arc->width_NFT);
@@ -143,13 +149,10 @@ int loadNFTMarker(arFset *arc, int surfaceSetCount,
   kpmLoadRefDataSet( datasetPathname, "fset3", &arc->refDataSet );
   if( arc->refDataSet == NULL ) {
       ARLOGe("file open error: %s.fset3\n", datasetPathname );
-      exit(0);
+      return FALSE;
   }
   ARLOGi("  end.\n");
   ARLOGi("num = %d\n", arc->refDataSet->num);
-
-  if (surfaceSetCount == PAGES_MAX)
-    exit(-1);
 
   ARLOGi("imgsizePointer: %d\n", arc->imgBWsize);
 
@@ -170,7 +173,7 @@ nftMarker readNFTMarker(int id, std::string datasetPathname) {
     ARLOGe("ARimageFsetDisplay(): Unable to read NFT marker.\n");
     return nft;
   } else {
-    ARLOGi("Passing the imgBW pointer: %d\n", (int)arc->imgBW);
+    ARLOGi("Passing the imgBW pointer: %p\n", (void *)arc->imgBW);
   }
 
   arc->surfaceSetCount++;
@@ -208,10 +211,12 @@ int setup(int width, int height) {
   arFset *arc = &(arFsets[id]);
   arc->id = id;
   arc->imgBWsize = width * height * 4 * sizeof(ARUint8);
-  arc->imgBW = (ARUint8 *)malloc(arc->imgBWsize);
-  arc->F_points_NFT = (AR2FeaturePointsT *)malloc(arc->num_F_points_NFT * 2);
+  // imgBW and F_points_NFT are filled in by loadNFTMarker from the loaded
+  // surface set, so we don't allocate them here.
+  arc->imgBW = NULL;
+  arc->F_points_NFT = NULL;
 
-  ARLOGi("Allocated imgBWsize %d\n", arc->imgBWsize);
+  ARLOGi("Reserved imgBWsize %d\n", arc->imgBWsize);
 
   return arc->id;
 }
