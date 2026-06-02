@@ -127,11 +127,8 @@ ARfset.prototype.loadNFTMarker = function (markerURL, onSuccess, onError) {
     var self = this;
     if (markerURL) {
       return arfset.readNFTMarker(this.id, markerURL, function (nftMarker) {
-          //console.log(nftMarker);
-          //console.log(nftMarker.nftPoints);
-          var params = arfset.frameMalloc;
-          self.frameIbwpointer = params.frameIbwpointer;
-          self.frameimgBWsize = params.frameimgBWsize;
+          self.frameIbwpointer = nftMarker.pointer;
+          self.frameimgBWsize = nftMarker.imgBWsize;
           var nftEvent = new CustomEvent('nftMarker', {
             detail: {
               numIset: nftMarker.numIset,

@@ -155,9 +155,8 @@ export default class ARFset {
     async loadNFTMarker (urlOrData) {
         let nft = await this.addNFTMarker(this.id, urlOrData)
         .then((nftMarker) => {
-             var params = arfset.frameMalloc;
-              this.frameIbwpointer = params.frameIbwpointer;
-              this.frameimgBWsize = params.frameimgBWsize;
+              this.frameIbwpointer = nftMarker.pointer;
+              this.frameimgBWsize = nftMarker.imgBWsize;
               var nftEvent = new CustomEvent('nftMarker', {
                 detail: {
                   numIset: nftMarker.numIset,
@@ -180,9 +179,8 @@ export default class ARFset {
       async loadNFTMarkerBlob (urlOrData) {
         let nft = await this.addNFTMarkerBlob(this.id, urlOrData)
         .then((nftMarker) => {
-             var params = arfset.frameMalloc;
-              this.frameIbwpointer = params.frameIbwpointer;
-              this.frameimgBWsize = params.frameimgBWsize;
+              this.frameIbwpointer = nftMarker.pointer;
+              this.frameimgBWsize = nftMarker.imgBWsize;
               var nftEvent = new CustomEvent('nftMarker', {
                 detail: {
                   numIset: nftMarker.numIset,

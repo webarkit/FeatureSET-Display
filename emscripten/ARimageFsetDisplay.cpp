@@ -175,18 +175,6 @@ nftMarker readNFTMarker(int id, std::string datasetPathname) {
 
   arc->surfaceSetCount++;
 
-  EM_ASM_(
-      {
-        if (!arfset["frameMalloc"]) {
-          arfset["frameMalloc"] = ({});
-        }
-        var frameMalloc = arfset["frameMalloc"];
-        frameMalloc["frameIbwpointer"] = $1;
-        frameMalloc["frameimgBWsize"] = $2;
-        frameMalloc["frameFeaturePoints"] = $3
-      },
-      arc->id, arc->imgBW, arc->imgBWsize, arc->F_points_NFT);
-
   nft.nftPoints.reserve(arc->num_F_points_NFT);
   for (int i = 0; i < arc->num_F_points_NFT; i++) {
     nftPoint p;
