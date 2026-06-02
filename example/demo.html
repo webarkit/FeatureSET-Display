@@ -60,17 +60,22 @@
         }
 
         function fileReader(ev) {
-            var dataURLs = [];
-            for (var i = 0; i < 3; i++) {
-                let reader = new FileReader();
-                reader.onload = function (event) {
-                    var dataURL = event.target.result;
-                    dataURLs.push(dataURL);
-                };
-                reader.readAsDataURL(ev.target.files[i]);
-            }
-            loadFset(dataURLs)
-        }
+    var files = Array.from(ev.target.files);
+    var order = ['iset', 'fset3', 'fset'];
+    files.sort(function (a, b) {
+        return order.indexOf(a.name.split('.').pop()) -
+               order.indexOf(b.name.split('.').pop());
+    });
+    var promises = files.map(function (file) {
+        return new Promise(function (resolve, reject) {
+            var reader = new FileReader();
+            reader.onload = function (e) { resolve(e.target.result); };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    });
+    Promise.all(promises).then(loadFset);
+}
     </script>
 </body>
 
