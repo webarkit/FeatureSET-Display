@@ -31,19 +31,14 @@
     "url": "https://github.com/webarkit/FeatureSET-Display/issues"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.7",
-    "@babel/preset-env": "^7.29.7",
-    "babel-loader": "^10.1.1",
-    "webpack": "^5.107.2",
-    "webpack-cli": "^7.0.3"
+    "vite": "^5.4.0"
   },
   "scripts": {
     "build": "node tools/makem.js",
     "build-no-libar": "node tools/makem.js --no-libar",
-    "dev-es6": "webpack --mode development --progress --watch",
-    "build-es6": "webpack --mode production",
-    "serve": "npx http-server -c -1",
-    "watch": "./node_modules/.bin/watch 'npm run build' ./js/"
+    "dev-es6": "vite build --watch",
+    "build-es6": "vite build",
+    "serve": "npx http-server -c -1"
   },
   "license": "LGPL-3.0"
 }
