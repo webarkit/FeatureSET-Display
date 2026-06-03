@@ -18,19 +18,19 @@
         <button class="bt" id="uploadBt" title="select all 3 files: .iset .fset and .fset3" onclick="document.getElementById('markerLoader').click();">Upload NFT marker</button>
     </div>
 
-    <script type="text/javascript" src="../dist/ARFset.js"></script>
-
-    <script>
+    <script type="module">
+        import ARFsetModule from '../dist/ARFset.js';
+        window.ARFset = ARFsetModule;
         var ar = new ARFset.ARFset();
         var markerLoader = document.getElementById('markerLoader');
         markerLoader.addEventListener('change', handleImage, false);
 
         function handleImage(e) {
-            nameWithExt = e.target.files[0].name;
+            let nameWithExt = e.target.files[0].name;
             if (e.target.files.length == 3) {
                 console.log("NFT marker uploaded: " + nameWithExt);
 
-                name = nameWithExt.substr(0, nameWithExt.lastIndexOf('.'));
+                const name = nameWithExt.substr(0, nameWithExt.lastIndexOf('.'));
 
                 let ext = nameWithExt.substr(nameWithExt.lastIndexOf('.'));
 

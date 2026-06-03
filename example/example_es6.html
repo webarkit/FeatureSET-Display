@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!--  copyright @kalwalt @webarkit see LICENSE.txt -->
+
 <head>
   <meta charset="utf-8">
   <title>A simple example for displaying a Feature Set file</title>
@@ -13,22 +14,24 @@
     <p>Feature points: light green circles</p>
     <p>FeatureSet3 points: tiny red circles</p>
   </div>
-  <script type="text/javascript" src="../dist/ARFset.js"></script>
- 
-  <script>
-   var ar = new ARFset.ARFset();
-   console.log(ar);
-   ar.initialize()
-   .then((e) => {
-       console.log(e);
-       ar.loadNFTMarker('data/pinball', (nft) => { 
-    console.log(nft);
-  });
-  document.addEventListener('nftMarker', (ev) => {
-    
-   })
-   ar.display();
-   })
+
+  <script type="module">
+    import ARFsetModule from '../dist/ARFset.js';
+    window.ARFset = ARFsetModule;
+    var ar = new ARFset.ARFset();
+    console.log(ar);
+    ar.initialize()
+      .then((e) => {
+        console.log(e);
+        ar.loadNFTMarker('data/pinball', (nft) => {
+          console.log(nft);
+        });
+        document.addEventListener('nftMarker', (ev) => {
+
+        })
+        ar.display();
+      })
   </script>
 </body>
+
 </html>
