@@ -1,17 +1,7 @@
 const path = require('path');
 
-module.exports = {
+const common = {
   entry: './src/index.js',
-  output: {
-    path: path.resolve('dist'),
-    filename: 'ARFset.js',
-    library: 'ARFset',
-    libraryTarget: 'umd',
-    // @see: https://github.com/webpack/webpack/issues/3929
-    libraryExport: 'default',
-    // @see: https://github.com/webpack/webpack/issues/6522
-    globalObject: 'this',
-  },
   module: {
     rules: [
       {
@@ -21,22 +11,47 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env'],
-            plugins: [
-              // @see https://github.com/babel/babel/issues/9849
-              ['@babel/transform-runtime']
-            ]
-          }
-        }]
+          },
+        }],
       },
     ],
   },
   resolve: {
     extensions: ['.js'],
- // @see https://stackoverflow.com/questions/59487224/webpack-throws-error-with-emscripten-cant-resolve-fs
- fallback: {
-  fs: false,
-  path: false,
-  crypto: false,
-}
-},
+    // @see https://stackoverflow.com/questions/59487224/webpack-throws-error-with-emscripten-cant-resolve-fs
+    fallback: {
+      fs: false,
+      path: false,
+      crypto: false,
+    },
+  },
 };
+
+// ESM build for module consumers (import / bundlers / Node ESM).
+const esmConfig = {
+  ...common,
+  experiments: { outputModule: true },
+  output: {
+    path: path.resolve('dist'),
+    filename: 'ARFset.js',
+    library: { type: 'module' },
+  },
+};
+
+// UMD build for script-tag consumers: exposes window.ARFset.
+// Mirrors the legacy global API so `new ARFset.ARFset()` keeps working.
+const umdConfig = {
+  ...common,
+  output: {
+    path: path.resolve('dist'),
+    filename: 'ARFset.umd.js',
+    library: {
+      name: 'ARFset',
+      type: 'umd',
+      export: 'default',
+    },
+    globalObject: 'this',
+  },
+};
+
+module.exports = [esmConfig, umdConfig];

@@ -118,10 +118,8 @@ const MEM = 256 * 1024 * 1024; // 256MB
 const SOURCE_PATH = path.resolve(__dirname, '../emscripten');
 const OUTPUT_PATH = path.resolve(__dirname, '../build');
 
-const BUILD_DEBUG_FILE = 'arfset.debug.js';
 const BUILD_WASM_FILE = 'arfset_wasm.js';
 const BUILD_WASM_ES6_FILE = 'arfset_ES6_wasm.js';
-const BUILD_MIN_FILE = 'arfset.min.js';
 
 if (!fs.existsSync(path.resolve(WEBARKITLIB_ROOT, 'include/AR/config.h'))) {
 	console.log('Renaming and moving config.h.in to config.h');
@@ -222,22 +220,12 @@ const FLAGS = [
 	'--bind',
 ];
 
-const PRE_FLAGS = ['--pre-js', path.resolve(__dirname, '../js/arfset.api.js')];
 const WASM_FLAGS = ['-s', 'SINGLE_FILE=1'];
 const ES6_FLAGS = [
 	'-s', 'EXPORT_ES6=1',
-	//'-s', 'USE_ES6_IMPORT_META=0',
 	'-s', 'ENVIRONMENT=web',
 	'-s', 'EXPORT_NAME=arFset',
 	'-s', 'MODULARIZE=1',
-];
-
-const DEBUG_FLAGS = [
-	'-g',
-	'-s', 'ASSERTIONS=1',
-	'--profiling',
-	'-s', 'ALLOW_MEMORY_GROWTH=1',
-	'-s', 'DEMANGLE_SUPPORT=1',
 ];
 
 const INCLUDES = [
@@ -274,29 +262,6 @@ const compile_arlib = emccCmd(
 		.concat(FLAGS)
 		.concat(DEFINES)
 		.concat(['-r', '-o', LIBAR_BC])
-);
-
-const compile_combine = emccCmd(
-	INCLUDES
-		.concat([LIBAR_BC])
-		.concat(MAIN_SOURCES)
-		.concat(PRE_FLAGS)
-		.concat(FLAGS)
-		.concat(['-s', 'WASM=0'])
-		.concat(DEBUG_FLAGS)
-		.concat(DEFINES)
-		.concat(['-o', path.resolve(OUTPUT_PATH, BUILD_DEBUG_FILE)])
-);
-
-const compile_combine_min = emccCmd(
-	INCLUDES
-		.concat([LIBAR_BC])
-		.concat(MAIN_SOURCES)
-		.concat(PRE_FLAGS)
-		.concat(FLAGS)
-		.concat(['-s', 'WASM=0'])
-		.concat(DEFINES)
-		.concat(['-o', path.resolve(OUTPUT_PATH, BUILD_MIN_FILE)])
 );
 
 const compile_wasm = emccCmd(
@@ -363,10 +328,8 @@ function runJob() {
 
 addJob(clean_builds);
 addJob(compile_arlib);
-addJob(compile_combine);
 addJob(compile_wasm);
 addJob(compile_wasm_es6);
-addJob(compile_combine_min);
 
 if (NO_LIBAR === true) {
 	jobs.splice(1, 1);

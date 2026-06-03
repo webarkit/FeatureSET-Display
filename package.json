@@ -1,7 +1,17 @@
 {
   "name": "@webarkit/featureset-display",
   "version": "0.3.0",
+  "type": "module",
   "main": "dist/ARFset.js",
+  "module": "dist/ARFset.js",
+  "unpkg": "dist/ARFset.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/ARFset.js",
+      "require": "./dist/ARFset.umd.js",
+      "default": "./dist/ARFset.js"
+    }
+  },
   "description": "FeatureSET Display based on ARToolKit, ported thanks to Emscripten",
   "keywords": [
     "ARToolKit",
