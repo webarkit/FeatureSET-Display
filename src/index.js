@@ -34,7 +34,7 @@
  *
  */
 
-import ARFset from './ARFset'
+import ARFset from './ARFset.js'
 
 export default {
     ARFset
