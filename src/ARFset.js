@@ -37,9 +37,12 @@
 import arFset from '../build/arfset_ES6_wasm.js'
 import Utils from './Utils'
 
+const DEFAULT_WIDTH = 893;
+const DEFAULT_HEIGHT = 1117;
+
 export default class ARFset {
 
-    constructor() {
+    constructor(options = {}) {
         this.id = 0;
         this.markerNFTCount = 0;
         this.numIset = 0;
@@ -53,6 +56,8 @@ export default class ARFset {
         this.canvas = null;
         this.canvasParent = null;
         this.ctx = null;
+        this.width = options.width ?? DEFAULT_WIDTH;
+        this.height = options.height ?? DEFAULT_HEIGHT;
         this.version = '0.3.0';
         console.log('FeatureSETDisplay version: ', this.version);
     }
@@ -246,12 +251,11 @@ export default class ARFset {
         })
       }
 
-    _setup (){
-        // we need to start with a memory dimension.
-        // Memory can be enlarged thanks to MEMORY_ALLOW_GROWTH option.
-        var width = 893;
-        var height = 1117;
-        this.id = this.instance.setup(width, height);
+    _setup () {
+        // Initial memory dimension. wasm memory grows on demand thanks to
+        // ALLOW_MEMORY_GROWTH, but allocating roughly the marker size up
+        // front avoids a couple of grow events on the first load.
+        this.id = this.instance.setup(this.width, this.height);
       }
 
 }
