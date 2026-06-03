@@ -34,53 +34,29 @@
  *
  */
 
-import axios from 'axios'
-
 export default class Utils {
-  static async fetchRemoteDataBlob(urlOrData) {
-    let data;
-    if (urlOrData.indexOf("\n") !== -1) {
-      // assume text from a .patt file
-      data = Utils.string2Uint8Data(urlOrData);
-      return data;
-
-    } else {
-      try {
-        const response = await axios.get(urlOrData, { responseType: 'arraybuffer' })
-        return new Uint8Array(response.data)
-      } catch (error) {
-        throw error
-      }
+  static async fetchRemoteDataBlob (urlOrData) {
+    // A data URL or plain string passed directly: treat as inline data.
+    if (typeof urlOrData === 'string' && urlOrData.indexOf('\n') !== -1) {
+      return Utils.string2Uint8Data(urlOrData);
     }
+    return Utils.fetchRemoteData(urlOrData);
   }
+
   static async fetchRemoteData (url) {
-    try {
-      const response = await axios.get(url, { responseType: 'arraybuffer' })
-      return new Uint8Array(response.data)
-    } catch (error) {
-      throw error
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
     }
-  }
-
-  static async fetchRemoteDataCallback (url, callback) {
-    try {
-      const response = await axios.get(url, { responseType: 'arraybuffer' })
-      .then((response) => {
-        data = new Uint8Array(response.data)
-        console.log(data);
-        callback(response)
-      })
-      return response
-    } catch (error) {
-      throw error
-    }
+    const buffer = await response.arrayBuffer();
+    return new Uint8Array(buffer);
   }
 
   static string2Uint8Data (string) {
-    const data = new Uint8Array(string.length)
+    const data = new Uint8Array(string.length);
     for (let i = 0; i < data.length; i++) {
-      data[i] = string.charCodeAt(i) & 0xff
+      data[i] = string.charCodeAt(i) & 0xff;
     }
-    return data
+    return data;
   }
 }

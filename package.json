@@ -1,7 +1,19 @@
 {
   "name": "@webarkit/featureset-display",
-  "version": "0.3.0",
+  "version": "0.4.0",
+  "type": "module",
   "main": "dist/ARFset.js",
+  "module": "dist/ARFset.js",
+  "types": "dist/ARFset.d.ts",
+  "unpkg": "dist/ARFset.umd.js",
+  "exports": {
+    ".": {
+      "types": "./dist/ARFset.d.ts",
+      "import": "./dist/ARFset.js",
+      "require": "./dist/ARFset.umd.js",
+      "default": "./dist/ARFset.js"
+    }
+  },
   "description": "FeatureSET Display based on ARToolKit, ported thanks to Emscripten",
   "keywords": [
     "ARToolKit",
@@ -18,17 +30,12 @@
   "bugs": {
     "url": "https://github.com/webarkit/FeatureSET-Display/issues"
   },
-  "dependencies": {
-    "@babel/runtime": "^7.17.8",
-    "axios": "^0.26.1"
-  },
   "devDependencies": {
-    "@babel/core": "^7.17.8",
-    "@babel/plugin-transform-runtime": "^7.17.0",
-    "@babel/preset-env": "^7.16.11",
-    "babel-loader": "^8.2.4",
-    "webpack": "^5.70.0",
-    "webpack-cli": "^4.9.2"
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "babel-loader": "^10.1.1",
+    "webpack": "^5.107.2",
+    "webpack-cli": "^7.0.3"
   },
   "scripts": {
     "build": "node tools/makem.js",
