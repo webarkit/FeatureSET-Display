@@ -71,7 +71,7 @@ export default class ARFset {
         this.ctx = null;
         this.width = options.width ?? DEFAULT_WIDTH;
         this.height = options.height ?? DEFAULT_HEIGHT;
-        this.version = '0.4.0';
+        this.version = '0.5.0';
         console.log('FeatureSETDisplay version: ', this.version);
     }
 

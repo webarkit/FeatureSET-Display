@@ -2531,7 +2531,7 @@ var e = (() => {
 	}
 }, n = 893, r = 1117, i = { ARFset: class {
 	constructor(e = {}) {
-		this.id = 0, this.nftMarkerCount = 0, this.numIset = 0, this.imageSetWidth = 0, this.imageSetHeight = 0, this.dpi = 0, this.frameIbwpointer = null, this.frameimgBWsize = null, this.frameFeaturePoints = null, this.numFpoints = null, this.canvas = null, this.canvasParent = null, this.ctx = null, this.width = e.width ?? n, this.height = e.height ?? r, this.version = "0.4.0", console.log("FeatureSETDisplay version: ", this.version);
+		this.id = 0, this.nftMarkerCount = 0, this.numIset = 0, this.imageSetWidth = 0, this.imageSetHeight = 0, this.dpi = 0, this.frameIbwpointer = null, this.frameimgBWsize = null, this.frameFeaturePoints = null, this.numFpoints = null, this.canvas = null, this.canvasParent = null, this.ctx = null, this.width = e.width ?? n, this.height = e.height ?? r, this.version = "0.5.0", console.log("FeatureSETDisplay version: ", this.version);
 	}
 	async initialize() {
 		let t = await e();
