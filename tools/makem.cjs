@@ -212,7 +212,8 @@ if (HAVE_NFT) DEFINES.push('-D', 'HAVE_NFT');
 const FLAGS = [
 	OPTIMIZE_FLAGS,
 	'-Wno-warn-absolute-paths',
-	'-s', 'TOTAL_MEMORY=' + MEM,
+	// TOTAL_MEMORY was renamed to INITIAL_MEMORY in emscripten 1.39.x.
+	'-s', 'INITIAL_MEMORY=' + MEM,
 	'-s', 'USE_ZLIB=1',
 	'-s', 'USE_LIBJPEG',
 	'-s', 'EXPORTED_RUNTIME_METHODS=["FS"]',

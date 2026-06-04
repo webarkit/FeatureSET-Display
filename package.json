@@ -24,26 +24,25 @@
   "author": "Walter Perdan @kalwalt (https://github.com/kalwalt)",
   "repository": "https://github.com/webarkit/FeatureSET-Display.git",
   "homepage": "https://github.com/webarkit/FeatureSET-Display",
-  "contributors": [
-    ""
-  ],
   "bugs": {
     "url": "https://github.com/webarkit/FeatureSET-Display/issues"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.7",
-    "@babel/preset-env": "^7.29.7",
-    "babel-loader": "^10.1.1",
-    "webpack": "^5.107.2",
-    "webpack-cli": "^7.0.3"
+    "@playwright/test": "^1.50.0",
+    "http-server": "^14.1.1",
+    "vite": "^8.0.16",
+    "vitest": "^4.1.8"
   },
   "scripts": {
-    "build": "node tools/makem.js",
-    "build-no-libar": "node tools/makem.js --no-libar",
-    "dev-es6": "webpack --mode development --progress --watch",
-    "build-es6": "webpack --mode production",
+    "build": "node tools/makem.cjs",
+    "build-no-libar": "node tools/makem.cjs --no-libar",
+    "dev-es6": "vite build --watch",
+    "build-es6": "vite build",
     "serve": "npx http-server -c -1",
-    "watch": "./node_modules/.bin/watch 'npm run build' ./js/"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install --with-deps chromium"
   },
   "license": "LGPL-3.0"
 }

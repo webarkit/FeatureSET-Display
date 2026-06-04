@@ -4,7 +4,11 @@ emscripten/**/*
 example/*
 tools/
 tools/*
+tests/
+test-result/
 build/*.bc
+build/*.o
 *.zip
 docs/**/*
 docs/
+.github/
